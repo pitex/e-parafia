@@ -40,3 +40,11 @@ CREATE TABLE pogrzeby (
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	data date	
 );
+
+CREATE TABLE malzenstwa (
+	id numeric CONSTRAINT pk_malz PRIMARY KEY,
+	pesel_zony char(11),
+	pesel_meza char(11),
+	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
+	CONSTRAINT fk_para CHECK(pesel_zony REFERENCES parafianie(pesel) OR pesel_meza REFERENCES parafianie(pesel))
+);
