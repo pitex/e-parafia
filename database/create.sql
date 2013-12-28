@@ -18,7 +18,7 @@ CREATE TABLE PARAFIANIE (
 
 CREATE TABLE POMOCNICY (
 	pesel REFERENCES parafianie(pesel),
-	funkcja varchar(100) CONSTRAINT f_pomoc in('MINISTRANT', 'LEKTOR', 'SZAFARZ')
+	funkcja varchar(20) CONSTRAINT f_pomoc in('MINISTRANT', 'LEKTOR', 'SZAFARZ')
 );
 
 CREATE TABLE ZMARLI (
@@ -30,9 +30,9 @@ CREATE TABLE ZMARLI (
 
 CREATE TABLE AKTYWNOSCI_KAPLANOW (
 	id CONSTRAINT pk_wyd PRIMARY KEY,
-	typ char(100) CONSTRAINT wyd_typ in ('CHRZEST', 'KOMUNIA', 'BIERZMOWANIE', 'SLUB', 'POGRZEB', 'WIZYTA'),---zeby byl nazwa AKTYWNOSCI_KAPLANOW,
-	data date,
+	typ varchar(20) CONSTRAINT wyd_typ in ('CHRZEST', 'KOMUNIA', 'BIERZMOWANIE', 'SLUB', 'POGRZEB', 'WIZYTA'),---zeby byl nazwa AKTYWNOSCI_KAPLANOW,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
+	data date,
 );
 
 CREATE TABLE CHRZTY (
@@ -71,5 +71,5 @@ CREATE TABLE POGRZEBY (
 
 CREATE TABLE WIZYTY_DUSZPASTERSKIE (
 	id numeric CONSTRAINT fk_wiz REFERENCES AKTYWNOSCI_KAPLANOW(id)
-	adres char(100)
+	adres varchar(500)
 );
