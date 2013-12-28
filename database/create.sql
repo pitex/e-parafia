@@ -13,6 +13,8 @@ CREATE TABLE KAPLANI (
 CREATE TABLE PARAFIANIE (
 	pesel char(11) CONSTRAINT pk_para PRIMARY KEY,
 	imie varchar(100) NOT NULL,
+	drugie_imie varchar(100) DEFAULT NULL,
+	trzecie_imie varchar(100) DEFAULT NULL,
 	nazwisko varchar(100) NOT NULL,
 	adres varchar(500) NOT NULL,
 	zyje boolean DEFAULT TRUE;
@@ -142,7 +144,7 @@ BEGIN
 		adr = 'Unknown';
 	END IF;
 
-	INSERT INTO parafianie (pesel, imie, nazwisko, adres) VALUES (NEW.pesel, NEW.imie, nazw, adr);
+	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko, adres) VALUES (NEW.pesel, NEW.imie, NEW.drugie_imie, nazw, adr);
 
 	RETURN NEW;
 END;
