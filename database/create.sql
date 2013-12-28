@@ -18,7 +18,7 @@ CREATE TABLE PARAFIANIE (
 
 CREATE TABLE POMOCNICY (
 	pesel REFERENCES parafianie(pesel),
-	funkcja varchar(100) CONSTRAINT f_pomoc in('MINISTRANT', 'LEKTOR', 'SZAFARZ')
+	funkcja varchar(20) CONSTRAINT f_pomoc in('MINISTRANT', 'LEKTOR', 'SZAFARZ')
 );
 
 CREATE TABLE ZMARLI (
@@ -29,7 +29,7 @@ CREATE TABLE ZMARLI (
 );
 
 CREATE TABLE CHRZTY (
-	id numeric CONSTRAINT fk_chrz REFERENCES AKTYWNOSCI_KAPLANOW(id),
+	id numeric CONSTRAINT pk_chrz PRIMARY KEY,
 	pesel_dziecka char(11) CONSTRAINT fk_para_dz REFERENCES parafianie(pesel),
 	--TO TRZEBA ZMIENIC - CHRZEST MA DODAWAC DZIECA DO PARAFIAN
 	pesel_matki char(11),
@@ -41,14 +41,14 @@ CREATE TABLE CHRZTY (
 );
 
 CREATE TABLE PIERWSZE_KOMUNIE (
-	id numeric CONSTRAINT fk_komu REFERENCES AKTYWNOSCI_KAPLANOW(id),
+	id numeric CONSTRAINT pk_komu PRIMARY KEY,
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
 	data date,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
 );
 
 CREATE TABLE BIERZMOWANIA (
-	id numeric CONSTRAINT fk_bierz REFERENCES AKTYWNOSCI_KAPLANOW(id),
+	id numeric CONSTRAINT pk_bierz PRIMARY KEY,
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
 	pesel_swiadka char(11),
 	data date,
@@ -56,7 +56,7 @@ CREATE TABLE BIERZMOWANIA (
 );
 
 CREATE TABLE SLUBY (
-	id numeric CONSTRAINT fk_slub REFERENCES AKTYWNOSCI_KAPLANOW(id),
+	id numeric CONSTRAINT pk_slub PRIMARY KEY,
 	pesel_zony char(11),
 	pesel_meza char(11),
 	CONSTRAINT fk_para CHECK(pesel_zony REFERENCES parafianie(pesel) OR pesel_meza REFERENCES parafianie(pesel)),
@@ -65,7 +65,7 @@ CREATE TABLE SLUBY (
 );
 
 CREATE TABLE POGRZEBY (
-	id numeric CONSTRAINT fk_pogrz REFERENCES AKTYWNOSCI_KAPLANOW(id),
+	id numeric CONSTRAINT pk_pogrz PRIMARY KEY,
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
 	data date,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
@@ -73,8 +73,8 @@ CREATE TABLE POGRZEBY (
 );
 
 CREATE TABLE WIZYTY_DUSZPASTERSKIE (
-	id numeric CONSTRAINT fk_wiz REFERENCES AKTYWNOSCI_KAPLANOW(id),
-	adres char(100),
+	id numeric CONSTRAINT pk_wiz PRIMARY KEY,
+	adres varchar(100),
 	data date,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
 );
