@@ -26,3 +26,10 @@ CREATE TABLE komunie (
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
 	data date
 );
+
+CREATE TABLE bierzmowania (
+	id numeric CONSTRAINT pk_bierz PRIMARY KEY,
+	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
+	pesel_swiadka cahr(11),
+	data date
+);
