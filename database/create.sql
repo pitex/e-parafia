@@ -16,7 +16,7 @@ CREATE TABLE PARAFIANIE (
 	drugie_imie varchar(100) DEFAULT NULL,
 	trzecie_imie varchar(100) DEFAULT NULL,
 	nazwisko varchar(100) NOT NULL,
-	adres varchar(500) NOT NULL,
+	adres varchar(500),
 	zyje boolean DEFAULT TRUE;
 );
 
@@ -152,7 +152,12 @@ CREATE OR REPLACE FUNCTION handle_pogrzeb() RETURNS trigger AS $handle_pogrzeb$
 DECLARE
 	nazw parafianie.nazwisko%TYPE;
 BEGIN
-	UPDATE parafianie SET zyje = FALSE WHERE pesel = 
+	IF (SELECT zyje FROM parafianie WHERE pesel = OLD.pesel) = FALSE THEN
+		RAISE EXCEPTION 'Ekshumacja?';
+	END IF;
+
+	UPDATE parafianie SET zyje = FALSE WHERE pesel = OLD.pesel;
+	
 	RETURN NEW;
 END;
 $handle_pogrzeb$
@@ -166,8 +171,5 @@ FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 CREATE TRIGGER handle_chrzest BEFORE INSERT ON chrzty
 FOR EACH ROW EXECUTE PROCEDURE handle_chrzest();
 
-
---------------------------------------------------	RULES	--------------------------------------------------
-
-
-CREATE RULE handle_pogrzeb AS ON DELETE TO pogrzeby DO ALSO UPDATE parafianie SET zyje = FALSE WHERE pesel = OLD.pesel;
+CREATE TRIGGER handle_pogrzeb BEFORE DELETE ON pogrzeby
+FOR EACH ROW EXECUTE PROCEDURE handle_pogrzeb();
