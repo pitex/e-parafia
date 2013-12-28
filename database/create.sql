@@ -148,6 +148,16 @@ END;
 $handle_chrzest$
 LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION handle_pogrzeb() RETURNS trigger AS $handle_pogrzeb$
+DECLARE
+	nazw parafianie.nazwisko%TYPE;
+BEGIN
+	UPDATE parafianie SET zyje = FALSE WHERE pesel = 
+	RETURN NEW;
+END;
+$handle_pogrzeb$
+LANGUAGE plpgsql;
+
 CREATE TRIGGER check_pesel_para BEFORE INSERT ON parafianie
 FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 CREATE TRIGGER check_pesel_kapl BEFORE INSERT ON kaplani
@@ -155,3 +165,9 @@ FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 
 CREATE TRIGGER handle_chrzest BEFORE INSERT ON chrzty
 FOR EACH ROW EXECUTE PROCEDURE handle_chrzest();
+
+
+--------------------------------------------------	RULES	--------------------------------------------------
+
+
+CREATE RULE handle_pogrzeb AS ON DELETE TO pogrzeby DO ALSO UPDATE parafianie SET zyje = FALSE WHERE pesel = OLD.pesel;
