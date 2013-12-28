@@ -173,3 +173,44 @@ FOR EACH ROW EXECUTE PROCEDURE handle_chrzest();
 
 CREATE TRIGGER handle_pogrzeb BEFORE DELETE ON pogrzeby
 FOR EACH ROW EXECUTE PROCEDURE handle_pogrzeb();
+
+
+--------------------------------------------------	SAMPLE DATA	--------------------------------------------------
+
+
+--parafianie
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678910', 'Adam', 'Adamski', 'Torfowa 15');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678911', 'Ada', 'Adamska', 'Torfowa 15');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678912', 'Zbigniew', 'Adamski', 'Torfowa 15');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678913', 'Zofia', 'Kowalska', 'Torfowa 16');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678914', 'Jan', 'Kowalski', 'Torfowa 16');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678915', 'Maciej', 'Kowalski', 'Torfowa 16');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678916', 'Piotr', 'Kowalski', 'Torfowa 16');
+
+--kaplani
+INSERT INTO KAPLANI VALUES('22222222222', 'Andrzej', 'Pezarski', 'wikary');
+INSERT INTO KAPLANI VALUES('22222222223', 'Grzegorz', 'Matecki', 'proboszcz');
+
+--pomocnicy
+INSERT INTO POMOCNICY VALUES('12345678914', 'szafarz');
+INSERT INTO POMOCNICY VALUES('12345678915', 'lektor');
+INSERT INTO POMOCNICY VALUES('12345678916', 'ministrant');
+
+--Ada i Adam biora slub
+INSERT INTO SLUBY VALUES(nextval('ID_SEQ'), '12345678910', '12345678911', '22222222223', date '2001-10-05');
+
+--Zbigniew umiera
+INSERT INTO POGRZEBY VALUES(nextval('ID_SEQ'), '12345678910', '22222222222', date '2001-10-06');
+
+--Adam i Ada chrzcza dziecko
+INSERT INTO CHRZTY VALUES(nextval('ID_SEQ'), '12345678920', 'Ida', 'Anna', '12345678911', '12345678910','12345678913', '12345678914', '22222222223', date '2005-10-05');
+
+--Piotr - komunia
+INSERT INTO PIERWSZE_KOMUNIE VALUES(nextval('ID_SEQ'), '12345678916', '22222222223', date '2005-10-05');
+
+--Maciej - bierzmowanie
+INSERT INTO BIERZMOWANIA VALUES(nextval('ID_SEQ'), '12345678915', 'Igor', '12345678911', '22222222223', date '2005-12-05');
+
+--wizyty duszpasterskie
+INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 16', '22222222223', date '2013-12-30');
+INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 15', '22222222222', date '2013-12-30');
