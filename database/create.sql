@@ -42,20 +42,18 @@ CREATE TABLE CHRZTY (
 	pesel_matki char(11),
 	pesel_ojca char(11),
 	pesel_matki_chrz char(11),
-	pesel_ojca_chrz char(11),
+	pesel_ojca_chrz char(11)
 );
 
 CREATE TABLE PIERWSZE_KOMUNIE (
 	id numeric CONSTRAINT fk_komu REFERENCES AKTYWNOSCI_KAPLANOW(id),
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
-	data date
 );
 
 CREATE TABLE BIERZMOWANIA (
 	id numeric CONSTRAINT fk_bierz REFERENCES AKTYWNOSCI_KAPLANOW(id),
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
 	pesel_swiadka char(11),
-	data date
 );
 
 CREATE TABLE SLUBY (
