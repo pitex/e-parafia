@@ -22,17 +22,10 @@ CREATE TABLE POMOCNICY (
 );
 
 CREATE TABLE ZMARLI (
-	pesel char(11) CONSTRAINT pk_para PRIMARY KEY,
+	pesel char(11) CONSTRAINT pk_zmar PRIMARY KEY,
 	imie varchar(100),
 	nazwisko varchar(100),
 	zmarly date
-);
-
-CREATE TABLE AKTYWNOSCI_KAPLANOW (
-	id CONSTRAINT pk_wyd PRIMARY KEY,
-	typ char(100) CONSTRAINT wyd_typ in ('CHRZEST', 'KOMUNIA', 'BIERZMOWANIE', 'SLUB', 'POGRZEB', 'WIZYTA'),---zeby byl nazwa AKTYWNOSCI_KAPLANOW,
-	data date,
-	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
 );
 
 CREATE TABLE CHRZTY (
@@ -42,34 +35,46 @@ CREATE TABLE CHRZTY (
 	pesel_matki char(11),
 	pesel_ojca char(11),
 	pesel_matki_chrz char(11),
-	pesel_ojca_chrz char(11)
+	pesel_ojca_chrz char(11),
+	data date,
+	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
 );
 
 CREATE TABLE PIERWSZE_KOMUNIE (
 	id numeric CONSTRAINT fk_komu REFERENCES AKTYWNOSCI_KAPLANOW(id),
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
+	data date,
+	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
 );
 
 CREATE TABLE BIERZMOWANIA (
 	id numeric CONSTRAINT fk_bierz REFERENCES AKTYWNOSCI_KAPLANOW(id),
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
 	pesel_swiadka char(11),
+	data date,
+	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
 );
 
 CREATE TABLE SLUBY (
 	id numeric CONSTRAINT fk_slub REFERENCES AKTYWNOSCI_KAPLANOW(id),
 	pesel_zony char(11),
 	pesel_meza char(11),
-	CONSTRAINT fk_para CHECK(pesel_zony REFERENCES parafianie(pesel) OR pesel_meza REFERENCES parafianie(pesel))
+	CONSTRAINT fk_para CHECK(pesel_zony REFERENCES parafianie(pesel) OR pesel_meza REFERENCES parafianie(pesel)),
+	data date,
+	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
 );
 
 CREATE TABLE POGRZEBY (
 	id numeric CONSTRAINT fk_pogrz REFERENCES AKTYWNOSCI_KAPLANOW(id),
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
+	data date,
+	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
 --dodad trigger usuwajacy parafianina
 );
 
 CREATE TABLE WIZYTY_DUSZPASTERSKIE (
-	id numeric CONSTRAINT fk_wiz REFERENCES AKTYWNOSCI_KAPLANOW(id)
-	adres char(100)
+	id numeric CONSTRAINT fk_wiz REFERENCES AKTYWNOSCI_KAPLANOW(id),
+	adres char(100),
+	data date,
+	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
 );
