@@ -7,8 +7,11 @@ CREATE TABLE parafianie (
 );
 
 CREATE TABLE kaplani (
-	pesel char(11) REFERENCES parafianie(pesel),
-	funkcja varchar(20)
+	pesel char(11) CONSTRAINT pk_kapl PRIMARY KEY,
+	imie varchar(100),
+	nazwisko varchar(100),
+	funkcja varchar(20),
+	urodzony date
 );
 
 CREATE TABLE chrzty (
@@ -34,17 +37,17 @@ CREATE TABLE bierzmowania (
 	data date
 );
 
-CREATE TABLE pogrzeby (
-	id numeric CONSTRAINT pk_pogrz PRIMARY KEY,
-	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
-	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
-	data date	
-);
-
 CREATE TABLE malzenstwa (
 	id numeric CONSTRAINT pk_malz PRIMARY KEY,
 	pesel_zony char(11),
 	pesel_meza char(11),
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	CONSTRAINT fk_para CHECK(pesel_zony REFERENCES parafianie(pesel) OR pesel_meza REFERENCES parafianie(pesel))
+);
+
+CREATE TABLE pogrzeby (
+	id numeric CONSTRAINT pk_pogrz PRIMARY KEY,
+	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
+	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
+	data date	
 );
