@@ -76,7 +76,9 @@ CREATE TABLE WIZYTY_DUSZPASTERSKIE (
 	data date NOT NULL
 );
 
+
 --------------------------------------------------	PERSPEKTYWY	--------------------------------------------------
+
 
 CREATE VIEW zmarli AS SELECT pesel, imie, nazwisko, adres, data FROM parafianie NATURAL JOIN pogrzeby WHERE zyje = 0;
 CREATE VIEW aktywnosci_kaplanow AS
@@ -90,6 +92,7 @@ CREATE VIEW aktywnosci_kaplanow AS
 
 
 --------------------------------------------------	TRIGGERS	--------------------------------------------------
+
 
 CREATE OR REPLACE FUNCTION check_pesel() RETURNS trigger AS $check_pesel$
 DECLARE
@@ -150,3 +153,6 @@ CREATE TRIGGER check_pesel_para BEFORE INSERT ON parafianie
 FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 CREATE TRIGGER check_pesel_kapl BEFORE INSERT ON kaplani
 FOR EACH ROW EXECUTE PROCEDURE check_pesel();
+
+CREATE TRIGGER handle_chrzest BEFORE INSERT ON chrzty
+FOR EACH ROW EXECUTE PROCEDURE handle_chrzest();
