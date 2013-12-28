@@ -6,32 +6,31 @@ CREATE TABLE KAPLANI (
 	pesel char(11) CONSTRAINT pk_kapl PRIMARY KEY,
 	imie varchar(100),
 	nazwisko varchar(100),
-	funkcja varchar(20),
-	urodzony date
+	funkcja varchar(20)
 );
 
 CREATE TABLE PARAFIANIE (
 	pesel char(11) CONSTRAINT pk_para PRIMARY KEY,
 	imie varchar(100),
 	nazwisko varchar(100),
-	urodzony date,
 	adres varchar(500)
 );
 
-CREATE TABLE MINISTRANCI (
+CREATE TABLE POMOCNICY (
 	pesel REFERENCES parafianie(pesel),
-	funkcja varchar(100)
+	funkcja varchar(100) CONSTRAINT f_pomoc in('MINISTRANT', 'LEKTOR', 'SZAFARZ')
 );
 
-CREATE TABLE LEKTORZY (
-);
-
-CREATE TABLE SZAFARZE (
+CREATE TABLE ZMARLI (
+	pesel char(11) CONSTRAINT pk_para PRIMARY KEY,
+	imie varchar(100),
+	nazwisko varchar(100),
+	zmarly date
 );
 
 CREATE TABLE AKTYWNOSCI_KAPLANOW (
 	id CONSTRAINT pk_wyd PRIMARY KEY,
-	typ char(100) CONSTRAINT wyd_typ ---zeby byl nazwa AKTYWNOSCI_KAPLANOW,
+	typ char(100) CONSTRAINT wyd_typ in ('CHRZEST', 'KOMUNIA', 'BIERZMOWANIE', 'SLUB', 'POGRZEB', 'WIZYTA'),---zeby byl nazwa AKTYWNOSCI_KAPLANOW,
 	data date,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
 );
@@ -39,6 +38,7 @@ CREATE TABLE AKTYWNOSCI_KAPLANOW (
 CREATE TABLE CHRZTY (
 	id numeric CONSTRAINT fk_chrz REFERENCES AKTYWNOSCI_KAPLANOW(id),
 	pesel_dziecka char(11) CONSTRAINT fk_para_dz REFERENCES parafianie(pesel),
+	--TO TRZEBA ZMIENIC - CHRZEST MA DODAWAC DZIECA DO PARAFIAN
 	pesel_matki char(11),
 	pesel_ojca char(11),
 	pesel_matki_chrz char(11),
