@@ -1,6 +1,7 @@
 ----   eParafia    ----
 
 CREATE SEQUENCE ID_SEQ increment by 1 start with 1;
+CREATE SEQUENCE id_akt_seq INCREMENT BY 1 START WITH 1;
 
 CREATE TABLE KAPLANI (
 	pesel char(11) CONSTRAINT pk_kapl PRIMARY KEY,
@@ -72,4 +73,14 @@ CREATE TABLE WIZYTY_DUSZPASTERSKIE (
 	data date NOT NULL
 );
 
-CREATE VIEW ZMARLI AS SELECT pesel, imie, nazwisko, adres, data FROM parafianie NATURAL JOIN pogrzeby WHERE zyje = 0;
+--------------------------------------------------	PERSPEKTYWY	--------------------------------------------------
+
+CREATE VIEW zmarli AS SELECT pesel, imie, nazwisko, adres, data FROM parafianie NATURAL JOIN pogrzeby WHERE zyje = 0;
+CREATE VIEW aktywnosci_kaplanow AS
+	SELECT id, 'CHRZEST' AS typ, pesel_kapl, data FROM chrzty UNION ALL
+	SELECT id, 'KOMUNIA' AS typ, pesel_kapl, data FROM pierwsze_komunie UNION ALL
+	SELECT id, 'BIERZMOWANIE' AS typ, pesel_kapl, data FROM bierzmowania UNION ALL
+	SELECT id, 'SLUB' AS typ, pesel_kapl, data FROM sluby UNION ALL
+	SELECT id, 'POGRZEB' AS typ, pesel_kapl, data FROM pogrzeby UNION ALL
+	SELECT id, 'WIZYTA' AS typ, pesel_kapl, data FROM wizyty_duszpasterskie
+	ORDER BY id;
