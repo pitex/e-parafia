@@ -13,8 +13,8 @@ CREATE TABLE KAPLANI (
 CREATE TABLE PARAFIANIE (
 	pesel char(11) CONSTRAINT pk_para PRIMARY KEY,
 	imie varchar(100) NOT NULL,
-	nazwisko varchar(100) NOT NULL,
-	adres varchar(500) NOT NULL,
+	nazwisko varchar(100),
+	adres varchar(500),
 	zyje boolean DEFAULT TRUE;
 );
 
@@ -71,7 +71,7 @@ CREATE TABLE POGRZEBY (
 
 CREATE TABLE WIZYTY_DUSZPASTERSKIE (
 	id numeric CONSTRAINT pk_wiz PRIMARY KEY,
-	adres varchar(100) NOT NULL,
+	adres varchar(500) NOT NULL,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	data date NOT NULL
 );
@@ -99,7 +99,7 @@ DECLARE
 	chk_sum int;
 BEGIN
 	IF NEW.pesel IS NULL THEN
-		RAISE EXCEPTION 'Pesel cannot be NULL';
+		RAISE EXCEPTION 'Trzeba wprowadzic pesel';
 	END IF;
 
 	chk_sum = 0;
@@ -116,7 +116,7 @@ BEGIN
 	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,11,1),'9');
 
 	IF MOD(chk_sum,10) != 0 THEN
-		RAISE EXCEPTION 'Wrong pesel';
+		RAISE EXCEPTION 'Zly pesel';
 	END IF;
 
 	RETURN NEW;
@@ -127,7 +127,6 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION handle_chrzest() RETURNS trigger AS $handle_chrzest$
 DECLARE
 	nazw parafianie.nazwisko%TYPE;
-	adr parafianie.adres%TYPE;
 BEGIN
 	IF NEW.pesel IN (SELECT pesel FROM parafianie) THEN
 		RETURN NEW;
@@ -138,11 +137,10 @@ BEGIN
 	ELSIF NEW.pesel_matki IN (SELECT pesel FROM parafianie) THEN
 		SELECT nazwisko, adres INTO nazw, adr FROM parafianie WHERE pesel = NEW.pesel_matki;
 	ELSE
-		nazw = 'Unknown';
-		adr = 'Unknown';
+		RAISE EXCEPTION 'Nie znam nazwiska dziecka';
 	END IF;
 
-	INSERT INTO parafianie (pesel, imie, nazwisko, adres) VALUES (NEW.pesel, NEW.imie, nazw, adr);
+	INSERT INTO parafianie (pesel, imie, nazwisko) VALUES (NEW.pesel, NEW.imie, nazw);
 
 	RETURN NEW;
 END;
