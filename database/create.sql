@@ -1,7 +1,6 @@
 ----   eParafia    ----
 
 CREATE SEQUENCE ID_SEQ increment by 1 start with 1;
-CREATE SEQUENCE id_akt_seq INCREMENT BY 1 START WITH 1;
 
 CREATE TABLE KAPLANI (
 	pesel char(11) CONSTRAINT pk_kapl PRIMARY KEY,
@@ -163,6 +162,15 @@ END;
 $handle_pogrzeb$
 LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION give_id() RETURNS trigger AS $give_id$
+BEGIN
+	NEW.id = nextval('ID_SEQ');
+	
+	RETURN NEW;
+END;
+$give_id$
+LANGUAGE plpgsql;
+
 CREATE TRIGGER check_pesel_para BEFORE INSERT ON parafianie
 FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 CREATE TRIGGER check_pesel_kapl BEFORE INSERT ON kaplani
@@ -173,6 +181,17 @@ FOR EACH ROW EXECUTE PROCEDURE handle_chrzest();
 
 CREATE TRIGGER handle_pogrzeb BEFORE DELETE ON pogrzeby
 FOR EACH ROW EXECUTE PROCEDURE handle_pogrzeb();
+
+CREATE TRIGGER give_id_chrzty BEFORE INSERT ON chrzty
+FOR EACH ROW EXECUTE PROCEDURE give_id();
+CREATE TRIGGER give_id_komunia BEFORE INSERT ON pierwsze_komunie
+FOR EACH ROW EXECUTE PROCEDURE give_id();
+CREATE TRIGGER give_id_bierz BEFORE INSERT ON bierzmowania
+FOR EACH ROW EXECUTE PROCEDURE give_id();
+CREATE TRIGGER give_id_sluby BEFORE INSERT ON sluby
+FOR EACH ROW EXECUTE PROCEDURE give_id();
+CREATE TRIGGER give_id_pogrzeby BEFORE INSERT ON pogrzeby
+FOR EACH ROW EXECUTE PROCEDURE give_id();
 
 
 --------------------------------------------------	SAMPLE DATA	--------------------------------------------------
