@@ -20,3 +20,9 @@ CREATE TABLE chrzty (
 	pesel_ojca_chrz char(11),
 	pesel_kaplana car(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel)
 );
+
+CREATE TABLE komunie (
+	id numeric CONSTRAINT pk_komu PRIMARY KEY,
+	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
+	data date
+);
