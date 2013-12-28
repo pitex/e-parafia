@@ -84,3 +84,36 @@ CREATE VIEW aktywnosci_kaplanow AS
 	SELECT id, 'POGRZEB' AS typ, pesel_kapl, data FROM pogrzeby UNION ALL
 	SELECT id, 'WIZYTA' AS typ, pesel_kapl, data FROM wizyty_duszpasterskie
 	ORDER BY id;
+
+
+--------------------------------------------------	TRIGGERS	--------------------------------------------------
+
+CREATE OR REPLACE FUNCTION check_pesel() RETURNS trigger AS $check_pesel$
+DECLARE
+	chk_sum int;
+BEGIN
+	IF NEW.pesel IS NULL 
+		THEN RAISE EXCEPTION 'Pesel cannot be NULL';
+	END IF;
+
+	chk_sum = 0;
+	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,1,1),'9');
+	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,2,1),'9')*3;
+	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,3,1),'9')*7;
+	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,4,1),'9')*9;
+	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,5,1),'9');
+	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,6,1),'9')*3;
+	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,7,1),'9')*7;
+	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,8,1),'9')*9;
+	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,9,1),'9');
+	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,10,1),'9')*3;
+	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,11,1),'9');
+
+	IF MOD(chk_sum,10) != 0 
+		THEN RAISE EXCEPTION 'Wrong pesel';
+	END IF;
+
+	RETURN NEW;
+END;
+$check_pesel$
+LANGUAGE plpgsql;
