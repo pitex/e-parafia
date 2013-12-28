@@ -33,3 +33,10 @@ CREATE TABLE bierzmowania (
 	pesel_swiadka cahr(11),
 	data date
 );
+
+CREATE TABLE pogrzeby (
+	id numeric CONSTRAINT pk_pogrz PRIMARY KEY,
+	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
+	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
+	data date	
+);
