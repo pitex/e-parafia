@@ -13,8 +13,10 @@ CREATE TABLE KAPLANI (
 CREATE TABLE PARAFIANIE (
 	pesel char(11) CONSTRAINT pk_para PRIMARY KEY,
 	imie varchar(100) NOT NULL,
-	nazwisko varchar(100),
-	adres varchar(500),
+	drugie_imie varchar(100) DEFAULT NULL,
+	trzecie_imie varchar(100) DEFAULT NULL,
+	nazwisko varchar(100) NOT NULL,
+	adres varchar(500) NOT NULL,
 	zyje boolean DEFAULT TRUE;
 );
 
@@ -28,7 +30,6 @@ CREATE TABLE CHRZTY (
 	pesel_dziecka char(11) CONSTRAINT fk_para_dz REFERENCES parafianie(pesel),
 	imie varchar(100) NOT NULL,
 	drugie_imie varchar(100),
-	--TO TRZEBA ZMIENIC - CHRZEST MA DODAWAC DZIECA DO PARAFIAN
 	pesel_matki char(11),
 	pesel_ojca char(11),
 	pesel_matki_chrz char(11),
@@ -140,7 +141,7 @@ BEGIN
 		RAISE EXCEPTION 'Nie znam nazwiska dziecka';
 	END IF;
 
-	INSERT INTO parafianie (pesel, imie, nazwisko) VALUES (NEW.pesel, NEW.imie, nazw);
+	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko, adres) VALUES (NEW.pesel, NEW.imie, NEW.drugie_imie, nazw, adr);
 
 	RETURN NEW;
 END;
