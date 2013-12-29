@@ -198,38 +198,38 @@ FOR EACH ROW EXECUTE PROCEDURE give_id();
 
 
 --parafianie
-INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678910', 'Adam', 'Adamski', 'Torfowa 15');
-INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678911', 'Ada', 'Adamska', 'Torfowa 15');
-INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678912', 'Zbigniew', 'Adamski', 'Torfowa 15');
-INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678913', 'Zofia', 'Kowalska', 'Torfowa 16');
-INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678914', 'Jan', 'Kowalski', 'Torfowa 16');
-INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678915', 'Maciej', 'Kowalski', 'Torfowa 16');
-INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('12345678916', 'Piotr', 'Kowalski', 'Torfowa 16');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('44051418519', 'Adam', 'Adamski', 'Torfowa 15');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('44072055603', 'Ada', 'Adamska', 'Torfowa 15');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('70081162014', 'Zbigniew', 'Adamski', 'Torfowa 15');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('86051317009', 'Zofia', 'Kowalska', 'Torfowa 16');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('87022855212', 'Jan', 'Kowalski', 'Torfowa 16');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('13282273710', 'Maciej', 'Kowalski', 'Torfowa 16');
+INSERT INTO PARAFIANIE(pesel, imie, nazwisko, adres) VALUES('11311185216', 'Piotr', 'Kowalski', 'Torfowa 16');
 
 --kaplani
-INSERT INTO KAPLANI VALUES('22222222222', 'Andrzej', 'Pezarski', 'wikary');
-INSERT INTO KAPLANI VALUES('22222222223', 'Grzegorz', 'Matecki', 'proboszcz');
+INSERT INTO KAPLANI VALUES('82031310309', 'Andrzej', 'Pezarski', 'wikary');
+INSERT INTO KAPLANI VALUES('78071873913', 'Grzegorz', 'Matecki', 'proboszcz');
 
 --pomocnicy
-INSERT INTO POMOCNICY VALUES('12345678914', 'szafarz');
-INSERT INTO POMOCNICY VALUES('12345678915', 'lektor');
-INSERT INTO POMOCNICY VALUES('12345678916', 'ministrant');
+INSERT INTO POMOCNICY VALUES('87022855212', 'szafarz');
+INSERT INTO POMOCNICY VALUES('13282273710', 'lektor');
+INSERT INTO POMOCNICY VALUES('11311185216', 'ministrant');
 
 --Ada i Adam biora slub
-INSERT INTO SLUBY VALUES(nextval('ID_SEQ'), '12345678910', '12345678911', '22222222223', date '2001-10-05');
+INSERT INTO SLUBY VALUES(nextval('ID_SEQ'), '44051418519', '44072055603', '78071873913', date '2001-10-05');
 
 --Zbigniew umiera
-INSERT INTO POGRZEBY VALUES(nextval('ID_SEQ'), '12345678910', '22222222222', date '2001-10-06');
+INSERT INTO POGRZEBY VALUES(nextval('ID_SEQ'), '44051418519', '82031310309', date '2001-10-06');
 
 --Adam i Ada chrzcza dziecko
-INSERT INTO CHRZTY VALUES(nextval('ID_SEQ'), '12345678920', 'Ida', 'Anna', '12345678911', '12345678910','12345678913', '12345678914', '22222222223', date '2005-10-05');
+INSERT INTO CHRZTY VALUES(nextval('ID_SEQ'), '12231327906', 'Ida', 'Anna', '44072055603', '44051418519','86051317009', '87022855212', '78071873913', date '2005-10-05');
 
 --Piotr - komunia
-INSERT INTO PIERWSZE_KOMUNIE VALUES(nextval('ID_SEQ'), '12345678916', '22222222223', date '2005-10-05');
+INSERT INTO PIERWSZE_KOMUNIE VALUES(nextval('ID_SEQ'), '11311185216', '78071873913', date '2005-10-05');
 
 --Maciej - bierzmowanie
-INSERT INTO BIERZMOWANIA VALUES(nextval('ID_SEQ'), '12345678915', 'Igor', '12345678911', '22222222223', date '2005-12-05');
+INSERT INTO BIERZMOWANIA VALUES(nextval('ID_SEQ'), '13282273710', 'Igor', '44072055603', '78071873913', date '2005-12-05');
 
 --wizyty duszpasterskie
-INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 16', '22222222223', date '2013-12-30');
-INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 15', '22222222222', date '2013-12-30');
+INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 16', '78071873913', date '2013-12-30');
+INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 15', '82031310309', date '2013-12-30');
