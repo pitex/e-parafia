@@ -237,7 +237,7 @@ CREATE TRIGGER give_id_pogrzeby BEFORE INSERT ON pogrzeby
 FOR EACH ROW EXECUTE PROCEDURE give_id();
 
 
---------------------------------------------------	SAMPLE DATA	--------------------------------------------------
+--------------------------------------------------	RULES	--------------------------------------------------
 
 
 CREATE RULE update_trzecie_imie AS ON INSERT TO bierzmowania DO ALSO UPDATE parafianie SET trzecie_imie = NEW.imie WHERE pesel = NEW.pesel;
