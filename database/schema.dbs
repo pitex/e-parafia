@@ -124,9 +124,12 @@
 			<storage><![CDATA[engine=InnoDB]]></storage>
 		</table>
 		<table name="pomocnicy" >
-			<column name="pesel" type="char" length="11" jt="1" />
+			<column name="pesel" type="char" length="11" jt="1" mandatory="y" />
 			<column name="funkcja" type="varchar" length="100" jt="12" mandatory="y" />
 			<index name="idx_pomocnicy" unique="UNIQUE" >
+				<column name="pesel" />
+			</index>
+			<index name="pk_pomocnicy" unique="PRIMARY_KEY" >
 				<column name="pesel" />
 			</index>
 			<fk name="fk_para" to_schema="eparafia" to_table="parafianie" >
@@ -177,14 +180,14 @@
 		</table>
 	</schema>
 	<layout id="Layout139952" name="Layout" show_relation_columns="y" >
-		<entity schema="eparafia" name="pogrzeby" color="d0def5" x="660" y="105" />
-		<entity schema="eparafia" name="kaplani" color="d0def5" x="345" y="210" />
-		<entity schema="eparafia" name="pomocnicy" color="d0def5" x="405" y="45" />
-		<entity schema="eparafia" name="wizyty_duszpasterskie" color="d0def5" x="90" y="60" />
-		<entity schema="eparafia" name="chrzty" color="d0def5" x="60" y="195" />
-		<entity schema="eparafia" name="pierwsze_komunie" color="d0def5" x="45" y="465" />
-		<entity schema="eparafia" name="parafianie" color="d0def5" x="375" y="495" />
-		<entity schema="eparafia" name="bierzmowania" color="d0def5" x="645" y="465" />
-		<entity schema="eparafia" name="sluby" color="d0def5" x="645" y="240" />
+		<entity schema="eparafia" name="kaplani" color="d0def5" x="330" y="180" />
+		<entity schema="eparafia" name="chrzty" color="d0def5" x="45" y="180" />
+		<entity schema="eparafia" name="parafianie" color="d0def5" x="330" y="405" />
+		<entity schema="eparafia" name="sluby" color="d0def5" x="510" y="60" />
+		<entity schema="eparafia" name="pogrzeby" color="d0def5" x="600" y="255" />
+		<entity schema="eparafia" name="bierzmowania" color="d0def5" x="540" y="390" />
+		<entity schema="eparafia" name="pierwsze_komunie" color="d0def5" x="120" y="450" />
+		<entity schema="eparafia" name="wizyty_duszpasterskie" color="d0def5" x="120" y="45" />
+		<entity schema="eparafia" name="pomocnicy" color="d0def5" x="345" y="600" />
 	</layout>
 </project>
