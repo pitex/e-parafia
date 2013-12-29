@@ -17,3 +17,5 @@ DROP FUNCTION IF EXISTS check_pesel();
 DROP FUNCTION IF EXISTS handle_chrzest();
 DROP FUNCTION IF EXISTS handle_pogrzeb();
 DROP FUNCTION IF EXISTS give_id();
+
+COMMIT;
