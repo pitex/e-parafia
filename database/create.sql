@@ -56,7 +56,7 @@ CREATE TABLE BIERZMOWANIA (
 CREATE TABLE SLUBY (
 	id numeric CONSTRAINT pk_slub PRIMARY KEY,
 	pesel_zony char(11) NOT NULL UNIQUE,
-	pesel_meza char(11) NOT NULL UNIQUE, --TODO trigger czy ktores jest z parafii
+	pesel_meza char(11) NOT NULL UNIQUE,
 	pesel_swiadka_zony char(11) NOT NULL,
 	pesel_swiadka_meza char(11) NOT NULL,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
