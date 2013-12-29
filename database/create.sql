@@ -95,6 +95,7 @@ CREATE VIEW aktywnosci_kaplanow AS
 --------------------------------------------------	TRIGGERS	--------------------------------------------------
 
 
+-- counts check sum based on pesel (should be 0)
 CREATE OR REPLACE FUNCTION count_pesel_checksum(pesel parafianie.pesel%TYPE) RETURNS int AS $$
 DECLARE
 	chk_sum int;
@@ -117,7 +118,7 @@ END;
 $$
 LANGUAGE plpgsql;
 
-
+-- checks if column 'pesel' is set right
 CREATE OR REPLACE FUNCTION check_pesel() RETURNS trigger AS $check_pesel$
 BEGIN
 	IF NEW.pesel IS NULL OR count_pesel_checksum(NEW.pesel) != 0 THEN
@@ -129,6 +130,7 @@ END;
 $check_pesel$
 LANGUAGE plpgsql;
 
+-- checks if child is already in parafianie, checks if either of parents is in parafianie, checks god patents' pesels, updates parafianie with child's data if needed
 CREATE OR REPLACE FUNCTION handle_chrzest() RETURNS trigger AS $handle_chrzest$
 DECLARE
 	nazw parafianie.nazwisko%TYPE;
@@ -157,6 +159,7 @@ END;
 $handle_chrzest$
 LANGUAGE plpgsql;
 
+-- checks if person is alive, updates parafianie
 CREATE OR REPLACE FUNCTION handle_pogrzeb() RETURNS trigger AS $handle_pogrzeb$
 DECLARE
 	nazw parafianie.nazwisko%TYPE;
@@ -172,6 +175,7 @@ END;
 $handle_pogrzeb$
 LANGUAGE plpgsql;
 
+-- gives id for aktywnosci_kaplanow
 CREATE OR REPLACE FUNCTION give_id() RETURNS trigger AS $give_id$
 BEGIN
 	NEW.id = nextval('ID_SEQ');
@@ -181,6 +185,7 @@ END;
 $give_id$
 LANGUAGE plpgsql;
 
+-- checks best men's pesels and if either of ppl in parafianie
 CREATE OR REPLACE FUNCTION handle_slub() RETURNS trigger AS $handle_slub$
 BEGIN
 	IF count_pesel_checksum(NEW.pesel_swiadka_zony) != 0 OR count_pesel_checksum(NEW.pesel_swiadka_zony) !=0 THEN
@@ -196,6 +201,7 @@ END;
 $handle_slub$
 LANGUAGE plpgsql;
 
+-- checks pesel
 CREATE OR REPLACE FUNCTION handle_bierzmowanie() RETURNS trigger AS $handle_bierzmowanie$
 BEGIN
 	IF count_pesel_checksum(NEW.pesel_swiadka) != 0 THEN

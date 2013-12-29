@@ -17,3 +17,6 @@ DROP FUNCTION IF EXISTS check_pesel();
 DROP FUNCTION IF EXISTS handle_chrzest();
 DROP FUNCTION IF EXISTS handle_pogrzeb();
 DROP FUNCTION IF EXISTS give_id();
+DROP FUNCTION IF EXISTS handle_slub();
+DROP FUNCTION IF EXISTS handle_bierzmowanie();
+DROP FUNCTION IF EXISTS count_pesel_checksum(pesel char(11));
