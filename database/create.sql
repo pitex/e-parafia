@@ -196,7 +196,7 @@ END;
 $handle_slub$
 LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION handle_bierzmowanie() RETURN trigger AS $handle_bierzmowanie$
+CREATE OR REPLACE FUNCTION handle_bierzmowanie() RETURNS trigger AS $handle_bierzmowanie$
 BEGIN
 	IF count_pesel_checksum(NEW.pesel_swiadka) != 0 THEN
 		RAISE EXCEPTION 'Nieprawidlowy pesel swiadka';
