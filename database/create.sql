@@ -27,9 +27,6 @@ CREATE TABLE POMOCNICY (
 CREATE TABLE CHRZTY (
 	id numeric CONSTRAINT pk_chrz PRIMARY KEY,
 	pesel_dziecka char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel) UNIQUE,
-	imie varchar(100) NOT NULL,
-	drugie_imie varchar(100),
-	nazwisko varchar(100) NOT NULL,
 	pesel_matki char(11) NOT NULL,
 	pesel_ojca char(11) NOT NULL,
 	pesel_matki_chrz char(11) NOT NULL,
@@ -48,7 +45,6 @@ CREATE TABLE PIERWSZE_KOMUNIE (
 CREATE TABLE BIERZMOWANIA (
 	id numeric CONSTRAINT pk_bierz PRIMARY KEY,
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel) UNIQUE,
-	imie varchar(100) NOT NULL,
 	pesel_swiadka char(11) NOT NULL,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	data date NOT NULL
@@ -83,6 +79,7 @@ CREATE TABLE WIZYTY_DUSZPASTERSKIE (
 
 
 CREATE VIEW zmarli AS SELECT pesel, imie, nazwisko, adres, data FROM parafianie NATURAL JOIN pogrzeby WHERE zyje = FALSE;
+
 CREATE VIEW aktywnosci_kaplanow AS
 	SELECT id, 'CHRZEST' AS typ, pesel_kapl, data FROM chrzty UNION ALL
 	SELECT id, 'KOMUNIA' AS typ, pesel_kapl, data FROM pierwsze_komunie UNION ALL
@@ -92,6 +89,15 @@ CREATE VIEW aktywnosci_kaplanow AS
 	SELECT id, 'WIZYTA' AS typ, pesel_kapl, data FROM wizyty_duszpasterskie
 	ORDER BY id;
 
+CREATE VIEW chrzty_szczegoly AS 
+	SELECT id, pesel_dziecka, imie, drugie_imie, nazwisko, pesel_matki, pesel_ojca, pesel_matki_chrz, pesel_ojca_chrz, pesel_kapl, data
+	FROM chrzty INNER JOIN parafianie ON pesel_dzieck = pesel
+	ORDER BY id;
+
+CREATE VIEW bierzmowania_szczegoly AS
+	SELECT id, pesel, trzecie_imie, pesel_swiadka, pesel_kapl, data 
+	FROM bierzmowania NATURAL JOIN parafianie
+	ORDER BY id;
 
 --------------------------------------------------	TRIGGERS	--------------------------------------------------
 
@@ -135,6 +141,7 @@ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION handle_chrzest() RETURNS trigger AS $handle_chrzest$
 BEGIN
 	IF NEW.pesel_dziecka IN (SELECT pesel FROM parafianie) THEN
+		INSERT INTO chrzty VALUES (NEW.id, NEW.pesel_dziecka, NEW.pesel_matki, NEW.pesel_ojca, NEW.pesel_matki_chrz, NEW.pesel_ojca_chrz, NEW.pesel_kapl, NEW.data);
 		RETURN NEW;
 	END IF;
 
@@ -148,6 +155,7 @@ BEGIN
 	END IF;
 
 	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko) VALUES (NEW.pesel_dziecka, NEW.imie, NEW.drugie_imie, NEW.nazwisko);
+	INSERT INTO chrzty VALUES (NEW.id, NEW.pesel_dziecka, NEW.pesel_matki, NEW.pesel_ojca, NEW.pesel_matki_chrz, NEW.pesel_ojca_chrz, NEW.pesel_kapl, NEW.data);
 
 	RETURN NEW;
 END;
@@ -213,7 +221,7 @@ FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 CREATE TRIGGER check_pesel_kapl BEFORE INSERT ON kaplani
 FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 
-CREATE TRIGGER handle_chrzest BEFORE INSERT ON chrzty
+CREATE TRIGGER handle_chrzest INSTEAD OF INSERT ON chrzty
 FOR EACH ROW EXECUTE PROCEDURE handle_chrzest();
 
 CREATE TRIGGER handle_bierzmowanie BEFORE INSERT ON bierzmowania
@@ -240,7 +248,11 @@ FOR EACH ROW EXECUTE PROCEDURE give_id();
 --------------------------------------------------	RULES	--------------------------------------------------
 
 
-CREATE RULE update_trzecie_imie AS ON INSERT TO bierzmowania DO ALSO UPDATE parafianie SET trzecie_imie = NEW.imie WHERE pesel = NEW.pesel;
+CREATE RULE update_trzecie_imie AS ON INSERT TO bierzmowania_szczegoly DO INSTEAD 
+(
+	UPDATE parafianie SET trzecie_imie = NEW.imie WHERE pesel = NEW.pesel;
+	INSERT INTO bierzmowania VALUES (NEW.id, NEW.pesel, NEW.pesel_swiadka, NEW.pesel_kapl, NEW.data);
+)
 
 
 --------------------------------------------------	SAMPLE DATA	--------------------------------------------------
@@ -271,13 +283,13 @@ INSERT INTO SLUBY VALUES(nextval('ID_SEQ'), '44051418519', '44072055603', '86051
 INSERT INTO POGRZEBY VALUES(nextval('ID_SEQ'), '44051418519', '82031310309', date '2001-10-06');
 
 --Adam i Ada chrzcza dziecko
-INSERT INTO CHRZTY VALUES(nextval('ID_SEQ'), '12231327906', 'Ida', 'Anna', 'Adamska', '44072055603', '44051418519','86051317009', '87022855212', '78071873913', date '2005-10-05');
+INSERT INTO chrzty_szczegoly VALUES(nextval('ID_SEQ'), '12231327906', 'Ida', 'Anna', 'Adamska', '44072055603', '44051418519','86051317009', '87022855212', '78071873913', date '2005-10-05');
 
 --Piotr - komunia
 INSERT INTO PIERWSZE_KOMUNIE VALUES(nextval('ID_SEQ'), '11311185216', '78071873913', date '2005-10-05');
 
 --Maciej - bierzmowanie
-INSERT INTO BIERZMOWANIA VALUES(nextval('ID_SEQ'), '13282273710', 'Igor', '44072055603', '78071873913', date '2005-12-05');
+INSERT INTO bierzmowania_szczegoly VALUES(nextval('ID_SEQ'), '13282273710', 'Igor', '44072055603', '78071873913', date '2005-12-05');
 
 --wizyty duszpasterskie
 INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 16', '78071873913', date '2013-12-30');
