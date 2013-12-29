@@ -4,6 +4,7 @@
 		<table name="bierzmowania" >
 			<column name="id" type="numeric" jt="2" mandatory="y" />
 			<column name="pesel" type="char" length="11" jt="1" mandatory="y" />
+			<column name="imie" type="varchar" length="100" jt="12" mandatory="y" />
 			<column name="pesel_swiadka" type="char" length="11" jt="1" mandatory="y" />
 			<column name="pesel_kapl" type="char" length="11" jt="1" mandatory="y" />
 			<column name="data" type="date" jt="91" mandatory="y" />
@@ -27,10 +28,13 @@
 		<table name="chrzty" >
 			<column name="id" type="numeric" jt="2" mandatory="y" />
 			<column name="pesel_dziecka" type="char" length="11" jt="1" />
-			<column name="pesel_matki" type="char" length="11" jt="1" />
-			<column name="pesel_ojca" type="char" length="11" jt="1" />
-			<column name="pesel_matki_chrz" type="char" length="11" jt="1" />
-			<column name="pesel_ojca_chrz" type="char" length="11" jt="1" />
+			<column name="imie" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="drugie_imie" type="varchar" length="100" jt="12" />
+			<column name="nazwisko" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="pesel_matki" type="char" length="11" jt="1" mandatory="y" />
+			<column name="pesel_ojca" type="char" length="11" jt="1" mandatory="y" />
+			<column name="pesel_matki_chrz" type="char" length="11" jt="1" mandatory="y" />
+			<column name="pesel_ojca_chrz" type="char" length="11" jt="1" mandatory="y" />
 			<column name="pesel_kapl" type="char" length="11" jt="1" mandatory="y" />
 			<column name="data" type="date" jt="91" mandatory="y" />
 			<index name="pk_chrzty" unique="PRIMARY_KEY" >
@@ -63,13 +67,15 @@
 		<table name="parafianie" >
 			<column name="pesel" type="char" length="11" jt="1" mandatory="y" />
 			<column name="imie" type="varchar" length="100" jt="12" mandatory="y" />
+			<column name="drugie_imie" type="varchar" length="100" jt="12" />
+			<column name="trzecie_imie" type="varchar" length="100" jt="12" />
 			<column name="nazwisko" type="varchar" length="100" jt="12" mandatory="y" />
 			<column name="adres" type="varchar" length="500" jt="12" mandatory="y" />
+			<column name="zyje" type="bool" jt="-7" >
+				<defo>&#039;TRUE&#039;</defo>
+			</column>
 			<index name="pk_parafianie" unique="PRIMARY_KEY" >
 				<column name="pesel" />
-			</index>
-			<index name="pk_parafianie_0" unique="UNIQUE" >
-				<column name="adres" />
 			</index>
 			<storage><![CDATA[engine=InnoDB]]></storage>
 		</table>
@@ -120,7 +126,7 @@
 		<table name="pomocnicy" >
 			<column name="pesel" type="char" length="11" jt="1" />
 			<column name="funkcja" type="varchar" length="100" jt="12" mandatory="y" />
-			<index name="idx_pomocnicy" unique="NORMAL" >
+			<index name="idx_pomocnicy" unique="UNIQUE" >
 				<column name="pesel" />
 			</index>
 			<fk name="fk_para" to_schema="eparafia" to_table="parafianie" >
@@ -132,6 +138,8 @@
 			<column name="id" type="numeric" jt="2" mandatory="y" />
 			<column name="pesel_zony" type="char" length="11" jt="1" mandatory="y" />
 			<column name="pesel_meza" type="char" length="11" jt="1" mandatory="y" />
+			<column name="pesel_swiadka_zony" type="char" length="11" jt="1" mandatory="y" />
+			<column name="pesel_swiadka_meza" type="char" length="11" jt="1" mandatory="y" />
 			<column name="pesel_kapl" type="char" length="11" jt="1" mandatory="y" />
 			<column name="data" type="date" jt="91" mandatory="y" />
 			<index name="pk_sluby" unique="PRIMARY_KEY" >
@@ -146,12 +154,6 @@
 			<index name="idx_sluby_0" unique="NORMAL" >
 				<column name="pesel_kapl" />
 			</index>
-			<fk name="fk_sluby_parafianie" to_schema="eparafia" to_table="parafianie" >
-				<fk_column name="pesel_zony" pk="pesel" />
-			</fk>
-			<fk name="fk_sluby_parafianie2" to_schema="eparafia" to_table="parafianie" >
-				<fk_column name="pesel_meza" pk="pesel" />
-			</fk>
 			<fk name="fk_sluby_kaplani" to_schema="eparafia" to_table="kaplani" >
 				<fk_column name="pesel_kapl" pk="pesel" />
 			</fk>
@@ -165,9 +167,6 @@
 			<index name="pk_wizyty_duszpasterskie" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
-			<index name="idx_wizyty_duszpasterskie" unique="NORMAL" >
-				<column name="adres" />
-			</index>
 			<index name="idx_wizyty_duszpasterskie_0" unique="NORMAL" >
 				<column name="pesel_kapl" />
 			</index>
@@ -178,14 +177,14 @@
 		</table>
 	</schema>
 	<layout id="Layout139952" name="Layout" show_relation_columns="y" >
-		<entity schema="eparafia" name="pomocnicy" color="d0def5" x="390" y="45" />
-		<entity schema="eparafia" name="kaplani" color="d0def5" x="330" y="210" />
-		<entity schema="eparafia" name="wizyty_duszpasterskie" color="d0def5" x="75" y="60" />
-		<entity schema="eparafia" name="chrzty" color="d0def5" x="45" y="210" />
-		<entity schema="eparafia" name="pierwsze_komunie" color="d0def5" x="45" y="420" />
-		<entity schema="eparafia" name="parafianie" color="d0def5" x="330" y="420" />
-		<entity schema="eparafia" name="pogrzeby" color="d0def5" x="645" y="105" />
-		<entity schema="eparafia" name="sluby" color="d0def5" x="630" y="240" />
-		<entity schema="eparafia" name="bierzmowania" color="d0def5" x="615" y="420" />
+		<entity schema="eparafia" name="pogrzeby" color="d0def5" x="660" y="105" />
+		<entity schema="eparafia" name="kaplani" color="d0def5" x="345" y="210" />
+		<entity schema="eparafia" name="pomocnicy" color="d0def5" x="405" y="45" />
+		<entity schema="eparafia" name="wizyty_duszpasterskie" color="d0def5" x="90" y="60" />
+		<entity schema="eparafia" name="chrzty" color="d0def5" x="60" y="195" />
+		<entity schema="eparafia" name="pierwsze_komunie" color="d0def5" x="45" y="465" />
+		<entity schema="eparafia" name="parafianie" color="d0def5" x="375" y="495" />
+		<entity schema="eparafia" name="bierzmowania" color="d0def5" x="645" y="465" />
+		<entity schema="eparafia" name="sluby" color="d0def5" x="645" y="240" />
 	</layout>
 </project>
