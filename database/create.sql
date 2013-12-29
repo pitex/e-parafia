@@ -16,7 +16,7 @@ CREATE TABLE PARAFIANIE (
 	trzecie_imie varchar(100) DEFAULT NULL,
 	nazwisko varchar(100) NOT NULL,
 	adres varchar(500),
-	zyje boolean DEFAULT 'True';
+	zyje boolean DEFAULT 'true';
 );
 
 CREATE TABLE POMOCNICY (
