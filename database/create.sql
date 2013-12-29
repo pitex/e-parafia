@@ -21,7 +21,7 @@ CREATE TABLE PARAFIANIE (
 
 CREATE TABLE POMOCNICY (
 	pesel char(11) REFERENCES parafianie(pesel),
-	funkcja varchar(20) CONSTRAINT f_pomoc in('MINISTRANT', 'LEKTOR', 'SZAFARZ')
+	funkcja varchar(20) CONSTRAINT f_pomoc CHECK(funkcja in('MINISTRANT', 'LEKTOR', 'SZAFARZ'))
 );
 
 CREATE TABLE CHRZTY (
