@@ -29,7 +29,7 @@ CREATE TABLE CHRZTY (
 	pesel_dziecka char(11) CONSTRAINT fk_para_dz REFERENCES parafianie(pesel),
 	imie varchar(100) NOT NULL,
 	drugie_imie varchar(100),
-	nzawisko varchar(100),
+	nazwisko varchar(100),
 	pesel_matki char(11) NOT NULL,
 	pesel_ojca char(11) NOT NULL,
 	pesel_matki_chrz char(11) NOT NULL,
