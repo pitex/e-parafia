@@ -183,6 +183,10 @@ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION handle_slub() RETURNS trigger AS $handle_slub$
 BEGIN
+	IF count_pesel_checksum(NEW.pesel_swiadka_zony) != 0 OR count_pesel_checksum(NEW.pesel_swiadka_zony) !=0 THEN
+		RAISE EXCEPTION 'Nieprawidlowy pesel swiadka';
+	END IF;
+
 	IF NEW.pesel_meza IN (SELECT pesel FROM parafianie) OR NEW.pesel_zony IN (SELECT pesel FROM parafianie) THEN
 		RETURN NEW;
 	END IF;
@@ -192,6 +196,17 @@ END;
 $handle_slub$
 LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION handle_bierzmowanie() RETURN trigger AS $handle_bierzmowanie$
+BEGIN
+	IF count_pesel_checksum(NEW.pesel_swiadka) != 0 THEN
+		RAISE EXCEPTION 'Nieprawidlowy pesel swiadka';
+	END IF;
+
+	RETURN NEW;
+END;
+$handle_bierzmowanie$
+LANGUAGE plpgsql;
+
 CREATE TRIGGER check_pesel_para BEFORE INSERT ON parafianie
 FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 CREATE TRIGGER check_pesel_kapl BEFORE INSERT ON kaplani
@@ -199,6 +214,9 @@ FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 
 CREATE TRIGGER handle_chrzest BEFORE INSERT ON chrzty
 FOR EACH ROW EXECUTE PROCEDURE handle_chrzest();
+
+CREATE TRIGGER handle_bierzmowanie BEFORE INSERT ON bierzmowania
+FOR EACH ROW EXECUTE PROCEDURE handle_bierzmowanie();
 
 CREATE TRIGGER handle_slub BEFORE INSERT ON sluby
 FOR EACH ROW EXECUTE PROCEDURE handle_slub();
@@ -221,7 +239,7 @@ FOR EACH ROW EXECUTE PROCEDURE give_id();
 --------------------------------------------------	SAMPLE DATA	--------------------------------------------------
 
 
-CREATE RULE handle_bierzmowanie AS ON INSERT TO bierzmowania DO ALSO UPDATE parafianie SET trzecie_imie = NEW.imie WHERE pesel = NEW.pesel;
+CREATE RULE update_trzecie_imie AS ON INSERT TO bierzmowania DO ALSO UPDATE parafianie SET trzecie_imie = NEW.imie WHERE pesel = NEW.pesel;
 
 
 --------------------------------------------------	SAMPLE DATA	--------------------------------------------------
