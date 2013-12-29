@@ -91,7 +91,7 @@ CREATE VIEW aktywnosci_kaplanow AS
 
 CREATE VIEW chrzty_szczegoly AS 
 	SELECT id, pesel_dziecka, imie, drugie_imie, nazwisko, pesel_matki, pesel_ojca, pesel_matki_chrz, pesel_ojca_chrz, pesel_kapl, data
-	FROM chrzty INNER JOIN parafianie ON pesel_dzieck = pesel
+	FROM chrzty INNER JOIN parafianie ON pesel_dziecka = pesel
 	ORDER BY id;
 
 CREATE VIEW bierzmowania_szczegoly AS
@@ -252,7 +252,7 @@ CREATE RULE update_trzecie_imie AS ON INSERT TO bierzmowania_szczegoly DO INSTEA
 (
 	UPDATE parafianie SET trzecie_imie = NEW.imie WHERE pesel = NEW.pesel;
 	INSERT INTO bierzmowania VALUES (NEW.id, NEW.pesel, NEW.pesel_swiadka, NEW.pesel_kapl, NEW.data);
-)
+);
 
 
 --------------------------------------------------	SAMPLE DATA	--------------------------------------------------
