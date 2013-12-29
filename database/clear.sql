@@ -1,5 +1,5 @@
 DROP SEQUENCE IF EXISTS ID_SEQ;
-DROP VIEW IF EXISTS aktywnosci_kaplnow;
+DROP VIEW IF EXISTS aktywnosci_kaplanow;
 DROP TABLE IF EXISTS wizyty_duszpasterskie;
 DROP TABLE IF EXISTS pogrzeby;
 DROP TABLE IF EXISTS sluby;
