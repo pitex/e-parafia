@@ -20,13 +20,13 @@ CREATE TABLE PARAFIANIE (
 );
 
 CREATE TABLE POMOCNICY (
-	pesel char(11) REFERENCES parafianie(pesel),
+	pesel char(11) REFERENCES parafianie(pesel) UNIQUE,
 	funkcja varchar(20) CONSTRAINT f_pomoc CHECK(funkcja in('MINISTRANT', 'LEKTOR', 'SZAFARZ'))
 );
 
 CREATE TABLE CHRZTY (
 	id numeric CONSTRAINT pk_chrz PRIMARY KEY,
-	pesel_dziecka char(11) CONSTRAINT fk_para_dz REFERENCES parafianie(pesel),
+	pesel_dziecka char(11) CONSTRAINT fk_para_dz REFERENCES parafianie(pesel) UNIQUE,
 	imie varchar(100) NOT NULL,
 	drugie_imie varchar(100),
 	nazwisko varchar(100) NOT NULL,
@@ -40,14 +40,14 @@ CREATE TABLE CHRZTY (
 
 CREATE TABLE PIERWSZE_KOMUNIE (
 	id numeric CONSTRAINT pk_komu PRIMARY KEY,
-	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
+	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel) UNIQUE,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	data date NOT NULL
 );
 
 CREATE TABLE BIERZMOWANIA (
 	id numeric CONSTRAINT pk_bierz PRIMARY KEY,
-	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
+	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel) UNIQUE,
 	imie varchar(100) NOT NULL,
 	pesel_swiadka char(11) NOT NULL,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
@@ -66,7 +66,7 @@ CREATE TABLE SLUBY (
 
 CREATE TABLE POGRZEBY (
 	id numeric CONSTRAINT pk_pogrz PRIMARY KEY,
-	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
+	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel) UNIQUE,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	data date NOT NULL
 );
