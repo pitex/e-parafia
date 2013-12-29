@@ -20,7 +20,7 @@ CREATE TABLE PARAFIANIE (
 );
 
 CREATE TABLE POMOCNICY (
-	pesel char(11) REFERENCES parafianie(pesel) UNIQUE,
+	pesel char(11) PRIMARY KEY REFERENCES parafianie(pesel) UNIQUE,
 	funkcja varchar(20) CONSTRAINT f_pomoc CHECK(funkcja in('MINISTRANT', 'LEKTOR', 'SZAFARZ'))
 );
 
