@@ -133,9 +133,9 @@ BEGIN
 	END IF;
 
 	IF NEW.pesel_ojca IN (SELECT pesel FROM parafianie) THEN
-		SELECT nazwisko, adres INTO nazw, adr FROM parafianie WHERE pesel = NEW.pesel_ojca;
+		SELECT nazwisko INTO nazw FROM parafianie WHERE pesel = NEW.pesel_ojca;
 	ELSIF NEW.pesel_matki IN (SELECT pesel FROM parafianie) THEN
-		SELECT nazwisko, adres INTO nazw, adr FROM parafianie WHERE pesel = NEW.pesel_matki;
+		SELECT nazwisko INTO nazw FROM parafianie WHERE pesel = NEW.pesel_matki;
 	ELSE
 		RAISE EXCEPTION 'Nie znam nazwiska dziecka';
 	END IF;
