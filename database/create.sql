@@ -29,7 +29,7 @@ CREATE TABLE CHRZTY (
 	pesel_dziecka char(11) CONSTRAINT fk_para_dz REFERENCES parafianie(pesel),
 	imie varchar(100) NOT NULL,
 	drugie_imie varchar(100),
-	nazwisko varchar(100),
+	nazwisko varchar(100) NOT NULL,
 	pesel_matki char(11) NOT NULL,
 	pesel_ojca char(11) NOT NULL,
 	pesel_matki_chrz char(11) NOT NULL,
@@ -133,18 +133,12 @@ LANGUAGE plpgsql;
 
 -- checks if child is already in parafianie, checks if either of parents is in parafianie, checks god patents' pesels, updates parafianie with child's data if needed
 CREATE OR REPLACE FUNCTION handle_chrzest() RETURNS trigger AS $handle_chrzest$
-DECLARE
-	nazw parafianie.nazwisko%TYPE;
 BEGIN
 	IF NEW.pesel_dziecka IN (SELECT pesel FROM parafianie) THEN
 		RETURN NEW;
 	END IF;
 
-	IF NEW.pesel_ojca IN (SELECT pesel FROM parafianie) THEN
-		SELECT nazwisko INTO nazw FROM parafianie WHERE pesel = NEW.pesel_ojca;
-	ELSIF NEW.pesel_matki IN (SELECT pesel FROM parafianie) THEN
-		SELECT nazwisko INTO nazw FROM parafianie WHERE pesel = NEW.pesel_matki;
-	ELSE
+	IF NEW.pesel_ojca NOT IN (SELECT pesel FROM parafianie) AND NEW.pesel_matki IN (SELECT pesel FROM parafianie) THEN
 		RAISE EXCEPTION 'Zadne z rodzicow nie jest z parafii';
 	END IF;
 
@@ -153,11 +147,7 @@ BEGIN
 		RAISE EXCEPTION 'Nieprawidlowy pesel';
 	END IF;
 
-	IF NEW.nazwisko IS NOT NULL THEN 
-		nazw = NEW.nazwisko;
-	END IF;
-
-	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko) VALUES (NEW.pesel_dziecka, NEW.imie, NEW.drugie_imie, nazw);
+	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko) VALUES (NEW.pesel_dziecka, NEW.imie, NEW.drugie_imie, NEW.nazwisko);
 
 	RETURN NEW;
 END;
@@ -281,7 +271,7 @@ INSERT INTO SLUBY VALUES(nextval('ID_SEQ'), '44051418519', '44072055603', '86051
 INSERT INTO POGRZEBY VALUES(nextval('ID_SEQ'), '44051418519', '82031310309', date '2001-10-06');
 
 --Adam i Ada chrzcza dziecko
-INSERT INTO CHRZTY VALUES(nextval('ID_SEQ'), '12231327906', 'Ida', 'Anna', '44072055603', '44051418519','86051317009', '87022855212', '78071873913', date '2005-10-05');
+INSERT INTO CHRZTY VALUES(nextval('ID_SEQ'), '12231327906', 'Ida', 'Anna', 'Adamska', '44072055603', '44051418519','86051317009', '87022855212', '78071873913', date '2005-10-05');
 
 --Piotr - komunia
 INSERT INTO PIERWSZE_KOMUNIE VALUES(nextval('ID_SEQ'), '11311185216', '78071873913', date '2005-10-05');
