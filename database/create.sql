@@ -16,11 +16,11 @@ CREATE TABLE PARAFIANIE (
 	trzecie_imie varchar(100) DEFAULT NULL,
 	nazwisko varchar(100) NOT NULL,
 	adres varchar(500),
-	zyje boolean DEFAULT TRUE;
+	zyje boolean DEFAULT 'True';
 );
 
 CREATE TABLE POMOCNICY (
-	pesel REFERENCES parafianie(pesel),
+	pesel char(11) REFERENCES parafianie(pesel),
 	funkcja varchar(20) CONSTRAINT f_pomoc in('MINISTRANT', 'LEKTOR', 'SZAFARZ')
 );
 
