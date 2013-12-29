@@ -1,6 +1,8 @@
 DROP SEQUENCE IF EXISTS ID_SEQ;
+
 DROP VIEW IF EXISTS aktywnosci_kaplanow;
 DROP VIEW IF EXISTS zmarli;
+
 DROP TABLE IF EXISTS wizyty_duszpasterskie;
 DROP TABLE IF EXISTS pogrzeby;
 DROP TABLE IF EXISTS sluby;
@@ -10,3 +12,8 @@ DROP TABLE IF EXISTS chrzty;
 DROP TABLE IF EXISTS pomocnicy;
 DROP TABLE IF EXISTS kaplani;
 DROP TABLE IF EXISTS parafianie;
+
+DROP FUNCTION IF EXISTS check_pesel();
+DROP FUNCTION IF EXISTS handle_chrzest();
+DROP FUNCTION IF EXISTS handle_pogrzeb();
+DROP FUNCTION IF EXISTS give_id();
