@@ -6,14 +6,14 @@ CREATE TABLE KAPLANI (
 	pesel char(11) CONSTRAINT pk_kapl PRIMARY KEY,
 	imie varchar(100) NOT NULL,
 	nazwisko varchar(100) NOT NULL,
-	funkcja varchar(20)
+	funkcja varchar(20) NOT NULL
 );
 
 CREATE TABLE PARAFIANIE (
 	pesel char(11) CONSTRAINT pk_para PRIMARY KEY,
 	imie varchar(100) NOT NULL,
-	drugie_imie varchar(100) DEFAULT NULL,
-	trzecie_imie varchar(100) DEFAULT NULL,
+	drugie_imie varchar(100),
+	trzecie_imie varchar(100),
 	nazwisko varchar(100) NOT NULL,
 	adres varchar(500),
 	zyje boolean DEFAULT TRUE
@@ -29,10 +29,10 @@ CREATE TABLE CHRZTY (
 	pesel_dziecka char(11) CONSTRAINT fk_para_dz REFERENCES parafianie(pesel),
 	imie varchar(100) NOT NULL,
 	drugie_imie varchar(100),
-	pesel_matki char(11),
-	pesel_ojca char(11),
-	pesel_matki_chrz char(11),
-	pesel_ojca_chrz char(11),
+	pesel_matki char(11) NOT NULL,
+	pesel_ojca char(11) NOT NULL,
+	pesel_matki_chrz char(11) NOT NULL,
+	pesel_ojca_chrz char(11) NOT NULL,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	data date NOT NULL
 );
@@ -57,6 +57,8 @@ CREATE TABLE SLUBY (
 	id numeric CONSTRAINT pk_slub PRIMARY KEY,
 	pesel_zony char(11) NOT NULL UNIQUE,
 	pesel_meza char(11) NOT NULL UNIQUE, --TODO trigger czy ktores jest z parafii
+	pesel_swiadka_zony char(11) NOT NULL,
+	pesel_swiadka_meza char(11) NOT NULL,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	data date NOT NULL
 );
@@ -66,7 +68,6 @@ CREATE TABLE POGRZEBY (
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel),
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	data date NOT NULL
---dodad trigger usuwajacy parafianina
 );
 
 CREATE TABLE WIZYTY_DUSZPASTERSKIE (
@@ -94,29 +95,33 @@ CREATE VIEW aktywnosci_kaplanow AS
 --------------------------------------------------	TRIGGERS	--------------------------------------------------
 
 
-CREATE OR REPLACE FUNCTION check_pesel() RETURNS trigger AS $check_pesel$
+CREATE OR REPLACE FUNCTION count_pesel_checksum(pesel parafianie.pesel%TYPE) RETURNS int AS $$
 DECLARE
 	chk_sum int;
 BEGIN
-	IF NEW.pesel IS NULL THEN
-		RAISE EXCEPTION 'Trzeba wprowadzic pesel';
-	END IF;
-
 	chk_sum = 0;
-	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,1,1),'9');
-	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,2,1),'9')*3;
-	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,3,1),'9')*7;
-	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,4,1),'9')*9;
-	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,5,1),'9');
-	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,6,1),'9')*3;
-	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,7,1),'9')*7;
-	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,8,1),'9')*9;
-	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,9,1),'9');
-	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,10,1),'9')*3;
-	chk_sum = chk_sum + TO_NUMBER(substr(NEW.pesel,11,1),'9');
+	chk_sum = chk_sum + TO_NUMBER(substr(pesel,1,1),'9');
+	chk_sum = chk_sum + TO_NUMBER(substr(pesel,2,1),'9')*3;
+	chk_sum = chk_sum + TO_NUMBER(substr(pesel,3,1),'9')*7;
+	chk_sum = chk_sum + TO_NUMBER(substr(pesel,4,1),'9')*9;
+	chk_sum = chk_sum + TO_NUMBER(substr(pesel,5,1),'9');
+	chk_sum = chk_sum + TO_NUMBER(substr(pesel,6,1),'9')*3;
+	chk_sum = chk_sum + TO_NUMBER(substr(pesel,7,1),'9')*7;
+	chk_sum = chk_sum + TO_NUMBER(substr(pesel,8,1),'9')*9;
+	chk_sum = chk_sum + TO_NUMBER(substr(pesel,9,1),'9');
+	chk_sum = chk_sum + TO_NUMBER(substr(pesel,10,1),'9')*3;
+	chk_sum = chk_sum + TO_NUMBER(substr(pesel,11,1),'9');
 
-	IF MOD(chk_sum,10) != 0 THEN
-		RAISE EXCEPTION 'Zly pesel';
+	RETURN MOD(chk_sum,10);
+END;
+$$
+LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION check_pesel() RETURNS trigger AS $check_pesel$
+BEGIN
+	IF NEW.pesel IS NULL OR count_pesel_checksum(NEW.pesel) != 0 THEN
+		RAISE EXCEPTION 'Nieprawidlowy pesel';
 	END IF;
 
 	RETURN NEW;
@@ -137,8 +142,13 @@ BEGIN
 	ELSIF NEW.pesel_matki IN (SELECT pesel FROM parafianie) THEN
 		SELECT nazwisko INTO nazw FROM parafianie WHERE pesel = NEW.pesel_matki;
 	ELSE
-		RAISE EXCEPTION 'Nie znam nazwiska dziecka';
+		RAISE EXCEPTION 'Zadne z rodzicow nie jest z parafii';
 	END IF;
+
+	IF 	count_pesel_checksum(NEW.pesel_ojca) != 0 OR count_pesel_checksum(NEW.pesel_matki) != 0 OR 
+		count_pesel_checksum(NEW.pesel_matki_chrz) != 0 OR count_pesel_checksum(NEW.pesel_ojca_chrz) != 0 THEN
+		RAISE EXCEPTION 'Nieprawidlowy pesel';
+	END IF; 
 
 	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko) VALUES (NEW.pesel_dziecka, NEW.imie, NEW.drugie_imie, nazw);
 
@@ -171,6 +181,17 @@ END;
 $give_id$
 LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION handle_slub() RETURNS trigger AS $handle_slub$
+BEGIN
+	IF NEW.pesel_meza IN (SELECT pesel FROM parafianie) OR NEW.pesel_zony IN (SELECT pesel FROM parafianie) THEN
+		RETURN NEW;
+	END IF;
+
+	RAISE EXCEPTION 'Zadne nie jest z parafii';
+END;
+$handle_slub$
+LANGUAGE plpgsql;
+
 CREATE TRIGGER check_pesel_para BEFORE INSERT ON parafianie
 FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 CREATE TRIGGER check_pesel_kapl BEFORE INSERT ON kaplani
@@ -178,6 +199,9 @@ FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 
 CREATE TRIGGER handle_chrzest BEFORE INSERT ON chrzty
 FOR EACH ROW EXECUTE PROCEDURE handle_chrzest();
+
+CREATE TRIGGER handle_slub BEFORE INSERT ON sluby
+FOR EACH ROW EXECUTE PROCEDURE handle_slub();
 
 CREATE TRIGGER handle_pogrzeb BEFORE DELETE ON pogrzeby
 FOR EACH ROW EXECUTE PROCEDURE handle_pogrzeb();
@@ -192,6 +216,12 @@ CREATE TRIGGER give_id_sluby BEFORE INSERT ON sluby
 FOR EACH ROW EXECUTE PROCEDURE give_id();
 CREATE TRIGGER give_id_pogrzeby BEFORE INSERT ON pogrzeby
 FOR EACH ROW EXECUTE PROCEDURE give_id();
+
+
+--------------------------------------------------	SAMPLE DATA	--------------------------------------------------
+
+
+CREATE RULE handle_bierzmowanie AS ON INSERT TO bierzmowania DO ALSO UPDATE parafianie SET trzecie_imie = NEW.imie WHERE pesel = NEW.pesel;
 
 
 --------------------------------------------------	SAMPLE DATA	--------------------------------------------------
@@ -216,7 +246,7 @@ INSERT INTO POMOCNICY VALUES('13282273710', 'LEKTOR');
 INSERT INTO POMOCNICY VALUES('11311185216', 'MINISTRANT');
 
 --Ada i Adam biora slub
-INSERT INTO SLUBY VALUES(nextval('ID_SEQ'), '44051418519', '44072055603', '78071873913', date '2001-10-05');
+INSERT INTO SLUBY VALUES(nextval('ID_SEQ'), '44051418519', '44072055603', '86051317009', '87022855212', '78071873913', date '2001-10-05');
 
 --Zbigniew umiera
 INSERT INTO POGRZEBY VALUES(nextval('ID_SEQ'), '44051418519', '82031310309', date '2001-10-06');
@@ -233,5 +263,3 @@ INSERT INTO BIERZMOWANIA VALUES(nextval('ID_SEQ'), '13282273710', 'Igor', '44072
 --wizyty duszpasterskie
 INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 16', '78071873913', date '2013-12-30');
 INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 15', '82031310309', date '2013-12-30');
-
-COMMIT;
