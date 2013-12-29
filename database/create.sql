@@ -29,6 +29,7 @@ CREATE TABLE CHRZTY (
 	pesel_dziecka char(11) CONSTRAINT fk_para_dz REFERENCES parafianie(pesel),
 	imie varchar(100) NOT NULL,
 	drugie_imie varchar(100),
+	nzawisko varchar(100),
 	pesel_matki char(11) NOT NULL,
 	pesel_ojca char(11) NOT NULL,
 	pesel_matki_chrz char(11) NOT NULL,
@@ -150,7 +151,11 @@ BEGIN
 	IF 	count_pesel_checksum(NEW.pesel_ojca) != 0 OR count_pesel_checksum(NEW.pesel_matki) != 0 OR 
 		count_pesel_checksum(NEW.pesel_matki_chrz) != 0 OR count_pesel_checksum(NEW.pesel_ojca_chrz) != 0 THEN
 		RAISE EXCEPTION 'Nieprawidlowy pesel';
-	END IF; 
+	END IF;
+
+	IF NEW.nazwisko IS NOT NULL THEN 
+		nazw = NEW.nazwisko;
+	END IF;
 
 	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko) VALUES (NEW.pesel_dziecka, NEW.imie, NEW.drugie_imie, nazw);
 
