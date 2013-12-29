@@ -80,7 +80,7 @@ CREATE TABLE WIZYTY_DUSZPASTERSKIE (
 --------------------------------------------------	PERSPEKTYWY	--------------------------------------------------
 
 
-CREATE VIEW zmarli AS SELECT pesel, imie, nazwisko, adres, data FROM parafianie NATURAL JOIN pogrzeby WHERE zyje = 0;
+CREATE VIEW zmarli AS SELECT pesel, imie, nazwisko, adres, data FROM parafianie NATURAL JOIN pogrzeby WHERE zyje = FALSE;
 CREATE VIEW aktywnosci_kaplanow AS
 	SELECT id, 'CHRZEST' AS typ, pesel_kapl, data FROM chrzty UNION ALL
 	SELECT id, 'KOMUNIA' AS typ, pesel_kapl, data FROM pierwsze_komunie UNION ALL
@@ -140,7 +140,7 @@ BEGIN
 		RAISE EXCEPTION 'Nie znam nazwiska dziecka';
 	END IF;
 
-	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko, adres) VALUES (NEW.pesel, NEW.imie, NEW.drugie_imie, nazw, adr);
+	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko) VALUES (NEW.pesel, NEW.imie, NEW.drugie_imie, nazw);
 
 	RETURN NEW;
 END;
