@@ -128,7 +128,7 @@ CREATE OR REPLACE FUNCTION handle_chrzest() RETURNS trigger AS $handle_chrzest$
 DECLARE
 	nazw parafianie.nazwisko%TYPE;
 BEGIN
-	IF NEW.pesel IN (SELECT pesel FROM parafianie) THEN
+	IF NEW.pesel_dziecka IN (SELECT pesel FROM parafianie) THEN
 		RETURN NEW;
 	END IF;
 
@@ -140,7 +140,7 @@ BEGIN
 		RAISE EXCEPTION 'Nie znam nazwiska dziecka';
 	END IF;
 
-	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko) VALUES (NEW.pesel, NEW.imie, NEW.drugie_imie, nazw);
+	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko) VALUES (NEW.pesel_dziecka, NEW.imie, NEW.drugie_imie, nazw);
 
 	RETURN NEW;
 END;
