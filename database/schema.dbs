@@ -4,7 +4,6 @@
 		<table name="bierzmowania" >
 			<column name="id" type="numeric" jt="2" mandatory="y" />
 			<column name="pesel" type="char" length="11" jt="1" mandatory="y" />
-			<column name="imie" type="varchar" length="100" jt="12" mandatory="y" />
 			<column name="pesel_swiadka" type="char" length="11" jt="1" mandatory="y" />
 			<column name="pesel_kapl" type="char" length="11" jt="1" mandatory="y" />
 			<column name="data" type="date" jt="91" mandatory="y" />
@@ -28,9 +27,6 @@
 		<table name="chrzty" >
 			<column name="id" type="numeric" jt="2" mandatory="y" />
 			<column name="pesel_dziecka" type="char" length="11" jt="1" />
-			<column name="imie" type="varchar" length="100" jt="12" mandatory="y" />
-			<column name="drugie_imie" type="varchar" length="100" jt="12" />
-			<column name="nazwisko" type="varchar" length="100" jt="12" mandatory="y" />
 			<column name="pesel_matki" type="char" length="11" jt="1" mandatory="y" />
 			<column name="pesel_ojca" type="char" length="11" jt="1" mandatory="y" />
 			<column name="pesel_matki_chrz" type="char" length="11" jt="1" mandatory="y" />
@@ -181,13 +177,13 @@
 	</schema>
 	<layout id="Layout139952" name="Layout" show_relation_columns="y" >
 		<entity schema="eparafia" name="kaplani" color="d0def5" x="330" y="180" />
-		<entity schema="eparafia" name="chrzty" color="d0def5" x="45" y="180" />
 		<entity schema="eparafia" name="parafianie" color="d0def5" x="330" y="405" />
 		<entity schema="eparafia" name="sluby" color="d0def5" x="510" y="60" />
 		<entity schema="eparafia" name="pogrzeby" color="d0def5" x="600" y="255" />
-		<entity schema="eparafia" name="bierzmowania" color="d0def5" x="540" y="390" />
 		<entity schema="eparafia" name="pierwsze_komunie" color="d0def5" x="120" y="450" />
 		<entity schema="eparafia" name="wizyty_duszpasterskie" color="d0def5" x="120" y="45" />
 		<entity schema="eparafia" name="pomocnicy" color="d0def5" x="345" y="600" />
+		<entity schema="eparafia" name="chrzty" color="d0def5" x="45" y="180" />
+		<entity schema="eparafia" name="bierzmowania" color="d0def5" x="540" y="390" />
 	</layout>
 </project>
