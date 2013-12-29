@@ -221,7 +221,7 @@ FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 CREATE TRIGGER check_pesel_kapl BEFORE INSERT ON kaplani
 FOR EACH ROW EXECUTE PROCEDURE check_pesel();
 
-CREATE TRIGGER handle_chrzest INSTEAD OF INSERT ON chrzty
+CREATE TRIGGER handle_chrzest INSTEAD OF INSERT ON chrzty_szczegoly
 FOR EACH ROW EXECUTE PROCEDURE handle_chrzest();
 
 CREATE TRIGGER handle_bierzmowanie BEFORE INSERT ON bierzmowania

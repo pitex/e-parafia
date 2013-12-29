@@ -2,6 +2,8 @@ DROP SEQUENCE IF EXISTS ID_SEQ;
 
 DROP VIEW IF EXISTS aktywnosci_kaplanow;
 DROP VIEW IF EXISTS zmarli;
+DROP VIEW IF EXISTS chrzty_szczegoly;
+DROP VIEW IF EXISTS bierzmowania_szczegoly;
 
 DROP TABLE IF EXISTS wizyty_duszpasterskie;
 DROP TABLE IF EXISTS pogrzeby;
