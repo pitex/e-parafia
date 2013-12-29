@@ -8,6 +8,4 @@ Baza zawierać ma podstawowe informacje na temat księży, parafian oraz główn
 Baza zawiera również tabelę "pomocnicy" dla zarejestrowanych ministrantów, lektorów oraz szafarzy.
 W przypadku pogrzebów parafianin trafia do perspektywy zmarli, w przypadku chrztów jest dodawany do tabeli parafianie.
 Bierzmowanie stwarza możliwość dodania trzeciego imienia parafianina.
-Perspektywa aktywnosci_kaplanow przechowuje główne informacje na temat sakramentów i wizyt dokonywanych przez księży.
-
-Środki:
+Perspektywa aktywnosci_kaplanow przechowuje główne informacje na temat sakramentów, pogrzebów i wizyt dokonywanych przez księży.
