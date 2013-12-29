@@ -250,7 +250,7 @@ FOR EACH ROW EXECUTE PROCEDURE give_id();
 
 CREATE RULE update_trzecie_imie AS ON INSERT TO bierzmowania_szczegoly DO INSTEAD 
 (
-	UPDATE parafianie SET trzecie_imie = NEW.imie WHERE pesel = NEW.pesel;
+	UPDATE parafianie SET trzecie_imie = NEW.trzecie_imie WHERE pesel = NEW.pesel;
 	INSERT INTO bierzmowania VALUES (NEW.id, NEW.pesel, NEW.pesel_swiadka, NEW.pesel_kapl, NEW.data);
 );
 
