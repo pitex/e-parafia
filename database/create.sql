@@ -9,6 +9,10 @@ CREATE TABLE KAPLANI (
 	funkcja varchar(20) NOT NULL
 );
 
+CREATE TABLE POMOCNICY_FUNKCJE (
+	nazwa CONSTRAINT pk_funkcja PRIMARY KEY
+);
+
 CREATE TABLE PARAFIANIE (
 	pesel char(11) CONSTRAINT pk_para PRIMARY KEY,
 	imie varchar(100) NOT NULL,
@@ -16,16 +20,8 @@ CREATE TABLE PARAFIANIE (
 	trzecie_imie varchar(100),
 	nazwisko varchar(100) NOT NULL,
 	adres varchar(500),
+	funkcja_pomocnika CONSTRAINT fk_para_fun REFERENCES POMOCNICY_FUNKCJE(nazwa),
 	zyje boolean DEFAULT TRUE
-);
-
-CREATE TABLE POMOCNICY_FUNKCJE (
-	nazwa CONSTRAINT pk_funkcja PRIMARY KEY
-);
-
-CREATE TABLE POMOCNICY (
-	pesel char(11) CONSTRAINT pk_pomo PRIMARY KEY CONSTRAINT fk_para REFERENCES parafianie(pesel),
-	funkcja varchar(20) CONSTRAINT fk_funkcja
 );
 
 CREATE TABLE CHRZTY (
