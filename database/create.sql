@@ -19,9 +19,13 @@ CREATE TABLE PARAFIANIE (
 	zyje boolean DEFAULT TRUE
 );
 
+CREATE TABLE POMOCNICY_FUNKCJE (
+	nazwa CONSTRAINT pk_funkcja PRIMARY KEY
+);
+
 CREATE TABLE POMOCNICY (
 	pesel char(11) CONSTRAINT pk_pomo PRIMARY KEY CONSTRAINT fk_para REFERENCES parafianie(pesel),
-	funkcja varchar(20) CONSTRAINT f_pomoc CHECK(funkcja in('MINISTRANT', 'LEKTOR', 'SZAFARZ'))
+	funkcja varchar(20) CONSTRAINT fk_funkcja
 );
 
 CREATE TABLE CHRZTY (
@@ -253,6 +257,12 @@ CREATE RULE update_trzecie_imie AS ON INSERT TO bierzmowania_szczegoly DO INSTEA
 	UPDATE parafianie SET trzecie_imie = NEW.trzecie_imie WHERE pesel = NEW.pesel;
 	INSERT INTO bierzmowania VALUES (NEW.id, NEW.pesel, NEW.pesel_swiadka, NEW.pesel_kapl, NEW.data);
 );
+
+--------------------------------------------------	OBLIGATORY & CONSTANT DATA	--------------------------------------------------
+
+INSERT INTO POMOCNICY_FUNKCJE(nazwa) VALUES('MINISTRANT');
+INSERT INTO POMOCNICY_FUNKCJE(nazwa) VALUES('LEKTOR');
+INSERT INTO POMOCNICY_FUNKCJE(nazwa) VALUES('SZAFARZ');
 
 
 --------------------------------------------------	SAMPLE DATA	--------------------------------------------------
