@@ -9,6 +9,10 @@ CREATE TABLE KAPLANI (
 	funkcja varchar(20) NOT NULL
 );
 
+CREATE TABLE POMOCNICY_FUNKCJE (
+	nazwa CONSTRAINT pk_funkcja PRIMARY KEY
+);
+
 CREATE TABLE PARAFIANIE (
 	pesel char(11) CONSTRAINT pk_para PRIMARY KEY,
 	imie varchar(100) NOT NULL,
@@ -16,12 +20,8 @@ CREATE TABLE PARAFIANIE (
 	trzecie_imie varchar(100),
 	nazwisko varchar(100) NOT NULL,
 	adres varchar(500),
+	funkcja_pomocnika CONSTRAINT fk_para_fun REFERENCES POMOCNICY_FUNKCJE(nazwa),
 	zyje boolean DEFAULT TRUE
-);
-
-CREATE TABLE POMOCNICY (
-	pesel char(11) CONSTRAINT pk_pomo PRIMARY KEY CONSTRAINT fk_para REFERENCES parafianie(pesel),
-	funkcja varchar(20) CONSTRAINT f_pomoc CHECK(funkcja in('MINISTRANT', 'LEKTOR', 'SZAFARZ'))
 );
 
 CREATE TABLE CHRZTY (
@@ -32,6 +32,7 @@ CREATE TABLE CHRZTY (
 	pesel_matki_chrz char(11) NOT NULL,
 	pesel_ojca_chrz char(11) NOT NULL,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
+	ofiara numeric(6, 2),
 	data date NOT NULL
 );
 
@@ -57,6 +58,7 @@ CREATE TABLE SLUBY (
 	pesel_swiadka_zony char(11) NOT NULL,
 	pesel_swiadka_meza char(11) NOT NULL,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
+	ofiara numeric(6, 2),
 	data date NOT NULL
 );
 
@@ -64,6 +66,7 @@ CREATE TABLE POGRZEBY (
 	id numeric CONSTRAINT pk_pogrz PRIMARY KEY,
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel) UNIQUE,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
+	ofiara numeric(6, 2),
 	data date NOT NULL
 );
 
@@ -71,9 +74,17 @@ CREATE TABLE WIZYTY_DUSZPASTERSKIE (
 	id numeric CONSTRAINT pk_wiz PRIMARY KEY,
 	adres varchar(500) NOT NULL,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
+	ofiara numeric(6, 2),
 	data date NOT NULL
 );
 
+CREATE TABLE INTENCJE_MSZALNE (
+	id numeric CONSTRAINT pk_inte PRIMARY KEY,
+	opis varchar(1000),
+	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
+	ofiara numeric(6,2),
+	data date NOT NULL
+);
 
 --------------------------------------------------	PERSPEKTYWY	--------------------------------------------------
 
@@ -87,10 +98,11 @@ CREATE VIEW aktywnosci_kaplanow AS
 	SELECT id, 'SLUB' AS typ, pesel_kapl, data FROM sluby UNION ALL
 	SELECT id, 'POGRZEB' AS typ, pesel_kapl, data FROM pogrzeby UNION ALL
 	SELECT id, 'WIZYTA' AS typ, pesel_kapl, data FROM wizyty_duszpasterskie
+	SELECT id, 'INTENCJA' AS typ, pesel_kapl, data FROM intencje_mszalne
 	ORDER BY id;
 
 CREATE VIEW chrzty_szczegoly AS 
-	SELECT id, pesel_dziecka, imie, drugie_imie, nazwisko, pesel_matki, pesel_ojca, pesel_matki_chrz, pesel_ojca_chrz, pesel_kapl, data
+	SELECT id, pesel_dziecka, imie, drugie_imie, nazwisko, pesel_matki, pesel_ojca, pesel_matki_chrz, pesel_ojca_chrz, pesel_kapl, data, ofiara
 	FROM chrzty INNER JOIN parafianie ON pesel_dziecka = pesel
 	ORDER BY id;
 
@@ -98,6 +110,14 @@ CREATE VIEW bierzmowania_szczegoly AS
 	SELECT id, pesel, trzecie_imie, pesel_swiadka, pesel_kapl, data 
 	FROM bierzmowania NATURAL JOIN parafianie
 	ORDER BY id;
+
+CREATE VIEW ofiary AS
+	SELECT ofiara, 'CHRZEST', data FROM CHRZTY
+	SELECT ofiara, 'SLUB', data FROM SLUBY
+	SELECT ofiara, 'POGRZEB', data FROM POGRZEBY
+	SELECT ofiara, 'WIZYTA', data FROM WIZYTY_DUSZPASTERSKIE
+	SELECT ofiara, 'INTENCJA', data FROM INTENCJE_MSZALNE
+	ORDER BY data;
 
 --------------------------------------------------	TRIGGERS	--------------------------------------------------
 
@@ -254,6 +274,12 @@ CREATE RULE update_trzecie_imie AS ON INSERT TO bierzmowania_szczegoly DO INSTEA
 	INSERT INTO bierzmowania VALUES (NEW.id, NEW.pesel, NEW.pesel_swiadka, NEW.pesel_kapl, NEW.data);
 );
 
+--------------------------------------------------	OBLIGATORY & CONSTANT DATA	--------------------------------------------------
+
+INSERT INTO POMOCNICY_FUNKCJE(nazwa) VALUES('MINISTRANT');
+INSERT INTO POMOCNICY_FUNKCJE(nazwa) VALUES('LEKTOR');
+INSERT INTO POMOCNICY_FUNKCJE(nazwa) VALUES('SZAFARZ');
+
 
 --------------------------------------------------	SAMPLE DATA	--------------------------------------------------
 
@@ -272,9 +298,9 @@ INSERT INTO KAPLANI VALUES('82031310309', 'Andrzej', 'Pezarski', 'wikary');
 INSERT INTO KAPLANI VALUES('78071873913', 'Grzegorz', 'Matecki', 'proboszcz');
 
 --pomocnicy
-INSERT INTO POMOCNICY VALUES('87022855212', 'SZAFARZ');
-INSERT INTO POMOCNICY VALUES('13282273710', 'LEKTOR');
-INSERT INTO POMOCNICY VALUES('11311185216', 'MINISTRANT');
+--INSERT INTO POMOCNICY VALUES('87022855212', 'SZAFARZ');
+--INSERT INTO POMOCNICY VALUES('13282273710', 'LEKTOR');
+--INSERT INTO POMOCNICY VALUES('11311185216', 'MINISTRANT');
 
 --Ada i Adam biora slub
 INSERT INTO SLUBY VALUES(nextval('ID_SEQ'), '44051418519', '44072055603', '86051317009', '87022855212', '78071873913', date '2001-10-05');
