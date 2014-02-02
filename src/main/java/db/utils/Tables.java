@@ -1,0 +1,9 @@
+package db.utils;
+
+/**
+ * @author Michał Piekarz
+ */
+public enum Tables
+{
+    KAPLANI, PARAFIANIE, POMOCNICY_FUNKCJE, CHRZTY, PIERWSZE_KOMUNIE, BIERZMOWANIA, SLUBY, POGRZEBY, WIZYTY_DUSZPASTERSKIE, INTENCJE_MSZALNE
+}
