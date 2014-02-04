@@ -1,9 +1,8 @@
 package db.utils;
 
 /**
- * @author Michał Piekarz
+ * @author Katarzyna Janocha, Michał Piekarz
  */
-public enum Tables
-{
+public enum Tables {
     KAPLANI, PARAFIANIE, POMOCNICY_FUNKCJE, CHRZTY, PIERWSZE_KOMUNIE, BIERZMOWANIA, SLUBY, POGRZEBY, WIZYTY_DUSZPASTERSKIE, INTENCJE_MSZALNE
 }

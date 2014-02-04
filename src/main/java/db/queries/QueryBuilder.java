@@ -11,91 +11,75 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 /**
- * @author Michał Piekarz
+ * @author Katarzyna Janocha, Michał Piekarz
  */
-public class QueryBuilder
-{
-    public QueryBuilder()
-    {
+public class QueryBuilder {
+    public QueryBuilder() {
 
     }
 
-    public SelectBuilder select(TableValue... columns)
-    {
+    public SelectBuilder select(TableValue... columns) {
         return select(asList(columns));
     }
 
-    public SelectBuilder select(List<TableValue> columns)
-    {
+    public SelectBuilder select(List<TableValue> columns) {
         return new SelectBuilder(columns);
     }
 
-    public InsertBuilder insertInto(Tables table)
-    {
+    public InsertBuilder insertInto(Tables table) {
         return new InsertBuilder(table);
     }
 
-    public UpdateBuilder update(Tables table)
-    {
+    public UpdateBuilder update(Tables table) {
         return new UpdateBuilder(table);
     }
 
-    public DeleteBuilder deleteFrom(Tables table)
-    {
+    public DeleteBuilder deleteFrom(Tables table) {
         return new DeleteBuilder(table);
     }
 
-    private class SelectBuilder
-    {
+    private class SelectBuilder {
         private final List<TableValue> columns;
         private String whereCondition = null;
         private Tables table;
 
-        public SelectBuilder(List<TableValue> columns)
-        {
+        public SelectBuilder(List<TableValue> columns) {
             this.columns = new ArrayList<TableValue>();
             this.columns.addAll(columns);
         }
 
-        public SelectBuilder from(Tables from)
-        {
+        public SelectBuilder from(Tables from) {
             this.table = from;
 
             return this;
         }
 
-        public SelectBuilder where(String condition)
-        {
+        public SelectBuilder where(String condition) {
             whereCondition = condition;
 
             return this;
         }
 
-        public String build()
-        {
-            if (table == null)
-            {
+        public String build() {
+            if (table == null) {
                 throw new IllegalArgumentException("Must specify table to select from.");
             }
 
             StringBuilder sb = new StringBuilder();
 
             sb.append("SELECT %s");
-            for (int i = 0; i < columns.size() - 1; i++)
-            {
+            for (int i = 0; i < columns.size() - 1; i++) {
                 sb.append(", %s");
             }
 
             sb.append(" FROM %s");
-            if (whereCondition != null)
-            {
+            if (whereCondition != null) {
                 sb.append(" WHERE %s");
             }
             sb.append(";");
 
             String[] args = new String[columns.size() + 2];
-            for (int i = 0; i < columns.size(); i++)
-            {
+            for (int i = 0; i < columns.size(); i++) {
                 args[i] = columns.get(i).toString();
             }
             args[columns.size()] = table.toString();
@@ -105,53 +89,44 @@ public class QueryBuilder
         }
     }
 
-    private class InsertBuilder
-    {
+    private class InsertBuilder {
         private final Tables into;
         private final List<QueryPair> pairs;
 
-        public InsertBuilder(Tables into)
-        {
+        public InsertBuilder(Tables into) {
             this.pairs = new ArrayList<QueryPair>();
             this.into = into;
         }
 
-        public InsertBuilder values(QueryPair... pairs)
-        {
+        public InsertBuilder values(QueryPair... pairs) {
             return values(asList(pairs));
         }
 
-        public InsertBuilder values(List<QueryPair> pairs)
-        {
+        public InsertBuilder values(List<QueryPair> pairs) {
             this.pairs.addAll(pairs);
 
             return this;
         }
 
-        public String build()
-        {
-            if (pairs.size() == 0)
-            {
+        public String build() {
+            if (pairs.size() == 0) {
                 throw new IllegalArgumentException("Must give some values to insert.");
             }
 
             StringBuilder sb = new StringBuilder();
             sb.append("INSERT INTO %s(%s");
-            for (int i = 0; i < pairs.size() - 1; i++)
-            {
+            for (int i = 0; i < pairs.size() - 1; i++) {
                 sb.append(", %s");
             }
             sb.append(") VALUES(%s");
-            for (int i = 0; i < pairs.size() - 1; i++)
-            {
+            for (int i = 0; i < pairs.size() - 1; i++) {
                 sb.append(", %s");
             }
             sb.append(");");
 
             String[] args = new String[pairs.size() * 2 + 1];
             args[0] = into.toString();
-            for (int i = 0; i < pairs.size(); i++)
-            {
+            for (int i = 0; i < pairs.size(); i++) {
                 args[i + 1] = pairs.get(i).getKey().toString();
                 args[i + 1 + pairs.size()] = pairs.get(i).getFormattedValue();
             }
@@ -160,61 +135,51 @@ public class QueryBuilder
         }
     }
 
-    private class UpdateBuilder
-    {
+    private class UpdateBuilder {
         private final Tables table;
         private final List<QueryPair> setPairs;
         private String condition;
 
-        public UpdateBuilder(Tables table)
-        {
+        public UpdateBuilder(Tables table) {
             this.setPairs = new ArrayList<QueryPair>();
             this.table = table;
         }
 
-        public UpdateBuilder set(QueryPair... pairs)
-        {
+        public UpdateBuilder set(QueryPair... pairs) {
             return set(asList(pairs));
         }
 
-        public UpdateBuilder set(List<QueryPair> pairs)
-        {
+        public UpdateBuilder set(List<QueryPair> pairs) {
             this.setPairs.addAll(pairs);
 
             return this;
         }
 
-        public UpdateBuilder where(String condition)
-        {
+        public UpdateBuilder where(String condition) {
             this.condition = condition;
 
             return this;
         }
 
-        public String build()
-        {
+        public String build() {
             StringBuilder sb = new StringBuilder();
 
-            if (setPairs.size() == 0)
-            {
+            if (setPairs.size() == 0) {
                 throw new IllegalArgumentException("Must update some values.");
             }
 
             sb.append("UPDATE %s SET %s = %s");
-            for (int i = 0; i < setPairs.size() - 1; i++)
-            {
+            for (int i = 0; i < setPairs.size() - 1; i++) {
                 sb.append(", %s = %s");
             }
-            if (condition != null)
-            {
+            if (condition != null) {
                 sb.append("WHERE %s");
             }
             sb.append(";");
 
             String[] args = new String[2 * setPairs.size() + 2];
             args[0] = table.toString();
-            for (int i = 0; i < setPairs.size(); i++)
-            {
+            for (int i = 0; i < setPairs.size(); i++) {
                 args[i * 2 + 1] = setPairs.get(i).getKey().toString();
                 args[i * 2 + 2] = setPairs.get(i).getFormattedValue();
             }
@@ -224,30 +189,25 @@ public class QueryBuilder
         }
     }
 
-    private class DeleteBuilder
-    {
+    private class DeleteBuilder {
         private final Tables from;
         private String condition = null;
 
-        public DeleteBuilder(Tables from)
-        {
+        public DeleteBuilder(Tables from) {
             this.from = from;
         }
 
-        public DeleteBuilder where(String condition)
-        {
+        public DeleteBuilder where(String condition) {
             this.condition = condition;
 
             return this;
         }
 
-        public String build()
-        {
+        public String build() {
             StringBuilder sb = new StringBuilder();
 
             sb.append("DELETE FROM %s");
-            if (condition != null)
-            {
+            if (condition != null) {
                 sb.append(" WHERE %s");
             }
             sb.append(";");

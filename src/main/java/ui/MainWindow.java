@@ -3,8 +3,7 @@ package ui;
 import javax.swing.*;
 
 /**
- * @author Michał Piekarz
+ * @author Katarzyna Janocha, Michał Piekarz
  */
-public class MainWindow extends JFrame
-{
+public class MainWindow extends JFrame {
 }
