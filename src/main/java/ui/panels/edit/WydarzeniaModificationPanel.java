@@ -24,7 +24,7 @@ public class WydarzeniaModificationPanel extends JPanel {
 	}
 	
 	private Button remove() {
-		Button b = CommonUI.universalButton("DODAJ BIERZMOWANIE");
+		Button b = CommonUI.universalButton("USUN WYDARZENIE");
 		
 		return b;
 	}
