@@ -78,7 +78,7 @@ public class QueryBuilder {
                 }
                 sb.append(";");
 
-                String[] args = new String[columns.size() + 2];
+                Object[] args = new Object[columns.size() + 2];
                 for (int i = 0; i < columns.size(); i++) {
                     args[i] = columns.get(i).toString();
                 }
@@ -134,7 +134,7 @@ public class QueryBuilder {
                 }
                 sb.append(");");
 
-                String[] args = new String[pairs.size() * 2 + 1];
+                Object[] args = new Object[pairs.size() * 2 + 1];
                 args[0] = into.toString();
                 for (int i = 0; i < pairs.size(); i++) {
                     args[i + 1] = pairs.get(i).getKey().toString();
@@ -191,7 +191,7 @@ public class QueryBuilder {
                 }
                 sb.append(";");
 
-                String[] args = new String[2 * setPairs.size() + 2];
+                Object[] args = new Object[2 * setPairs.size() + 2];
                 args[0] = table.toString();
                 for (int i = 0; i < setPairs.size(); i++) {
                     args[i * 2 + 1] = setPairs.get(i).getKey().toString();
