@@ -4,7 +4,7 @@ import static db.utils.ColumnTypes.*;
 import static db.utils.TableValues.TableValue;
 
 /**
- * @author Michał Piekarz
+ * @author Katarzyna Janocha, Michał Piekarz
  */
 public class QueryPair {
 	private final TableValue key;

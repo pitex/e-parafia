@@ -3,36 +3,29 @@ package db.utils;
 import static db.utils.ColumnTypes.*;
 
 /**
- * @author Michał Piekarz
+ * @author Katarzyna Janocha, Michał Piekarz
  */
-public class TableValues
-{
-    public static enum Common implements TableValue
-    {
+public class TableValues {
+    public static enum Common implements TableValue {
         ALL;
 
         @Override
-        public char getType()
-        {
+        public char getType() {
             return 0;
         }
 
         @Override
-        public String toString()
-        {
+        public String toString() {
             return "*";
         }
     }
 
-    public static enum Parafianie implements TableValue
-    {
+    public static enum Parafianie implements TableValue {
         PESEL, IMIE, DRUGIE_IMIE, TRZECIE_IMIE, NAZWISKO, ADRES, FUNKCJA_POMOCNIKA, ZYJE;
 
         @Override
-        public char getType()
-        {
-            switch (this)
-            {
+        public char getType() {
+            switch (this) {
                 case PESEL:
                 case IMIE:
                 case DRUGIE_IMIE:
@@ -49,15 +42,12 @@ public class TableValues
         }
     }
 
-    public static enum Kaplani implements TableValue
-    {
+    public static enum Kaplani implements TableValue {
         PESEL, IMIE, NAZWISKO, FUNKCJA;
 
         @Override
-        public char getType()
-        {
-            switch (this)
-            {
+        public char getType() {
+            switch (this) {
                 case PESEL:
                 case IMIE:
                 case NAZWISKO:
@@ -69,15 +59,12 @@ public class TableValues
         }
     }
 
-    public static enum PomocnicyFunkcje implements TableValue
-    {
+    public static enum PomocnicyFunkcje implements TableValue {
         NAZWA;
 
         @Override
-        public char getType()
-        {
-            switch (this)
-            {
+        public char getType() {
+            switch (this) {
                 case NAZWA:
                     return STRING;
             }
@@ -86,15 +73,12 @@ public class TableValues
         }
     }
 
-    public static enum Chrzty implements TableValue
-    {
+    public static enum Chrzty implements TableValue {
         ID, PESEL_DZIECKA, PESEL_MATKI, PESEL_OJCA, PESEL_MATKI_CHRZ, PESEL_OJCA_CHRZ, PESEL_KAPL, OFIARA, DATA;
 
         @Override
-        public char getType()
-        {
-            switch (this)
-            {
+        public char getType() {
+            switch (this) {
                 case ID:
                 case OFIARA:
                     return INTEGER;
@@ -113,15 +97,12 @@ public class TableValues
         }
     }
 
-    public static enum PierwszeKomunie implements TableValue
-    {
+    public static enum PierwszeKomunie implements TableValue {
         ID, PESEL, PESEL_KAPL, DATA;
 
         @Override
-        public char getType()
-        {
-            switch (this)
-            {
+        public char getType() {
+            switch (this) {
                 case ID:
                     return INTEGER;
                 case PESEL:
@@ -135,15 +116,12 @@ public class TableValues
         }
     }
 
-    public static enum Bierzmowania implements TableValue
-    {
+    public static enum Bierzmowania implements TableValue {
         ID, PESEL, PESEL_SWIADKA, PESEL_KAPL, DATA;
 
         @Override
-        public char getType()
-        {
-            switch (this)
-            {
+        public char getType() {
+            switch (this) {
                 case ID:
                     return INTEGER;
                 case PESEL:
@@ -158,15 +136,12 @@ public class TableValues
         }
     }
 
-    public static enum Sluby implements TableValue
-    {
+    public static enum Sluby implements TableValue {
         ID, PESEL_ZONY, PESEL_MEZA, PESEL_SWIADKA_ZONY, PESEL_SWIADKA_MEZA, PESEL_KAPL, OFIARA, DATA;
 
         @Override
-        public char getType()
-        {
-            switch (this)
-            {
+        public char getType() {
+            switch (this) {
                 case ID:
                 case OFIARA:
                     return INTEGER;
@@ -184,15 +159,12 @@ public class TableValues
         }
     }
 
-    public static enum Pogrzeby implements TableValue
-    {
+    public static enum Pogrzeby implements TableValue {
         ID, PESEL, PESEL_KAPL, OFIARA, DATA;
 
         @Override
-        public char getType()
-        {
-            switch (this)
-            {
+        public char getType() {
+            switch (this) {
                 case ID:
                 case OFIARA:
                     return INTEGER;
@@ -207,15 +179,12 @@ public class TableValues
         }
     }
 
-    public static enum WizytyDuszpasterskie implements TableValue
-    {
+    public static enum WizytyDuszpasterskie implements TableValue {
         ID, ADRES, PESEL_KAPL, OFIARA, DATA;
 
         @Override
-        public char getType()
-        {
-            switch (this)
-            {
+        public char getType() {
+            switch (this) {
                 case ID:
                 case OFIARA:
                     return INTEGER;
@@ -230,15 +199,12 @@ public class TableValues
         }
     }
 
-    public static enum IntencjeMszalne implements TableValue
-    {
+    public static enum IntencjeMszalne implements TableValue {
         ID, OPIS, PESEL_KAPL, OFIARA, DATA;
 
         @Override
-        public char getType()
-        {
-            switch (this)
-            {
+        public char getType() {
+            switch (this) {
                 case ID:
                 case OFIARA:
                     return INTEGER;
@@ -253,8 +219,7 @@ public class TableValues
         }
     }
 
-    public static interface TableValue
-    {
+    public static interface TableValue {
         public char getType();
     }
 }
