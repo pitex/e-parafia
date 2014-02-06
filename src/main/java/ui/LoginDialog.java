@@ -1,7 +1,6 @@
 package ui;
 
 import model.Context;
-import security.Encoder;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +12,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 import static java.awt.Dialog.ModalityType.APPLICATION_MODAL;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.showMessageDialog;
 import static security.Encoder.encrypt;
 
 /**
@@ -49,6 +50,7 @@ public class LoginDialog extends JDialog {
             }
             catch (GeneralSecurityException | UnsupportedEncodingException e) {
                 e.printStackTrace();
+                showMessageDialog(this,e.getMessage(),"Error",ERROR_MESSAGE);
             }
         }
     }
@@ -90,13 +92,15 @@ public class LoginDialog extends JDialog {
         String pass = new String(pwdTextField.getPassword());
 
         String pwd = context.getPreferences().get(username, null);
-        String hash = "";
+        String hash;
 
         try {
             hash = encrypt(pass);
         }
         catch (GeneralSecurityException | UnsupportedEncodingException e1) {
             e1.printStackTrace();
+            showMessageDialog(this,e1.getMessage(),"Error",ERROR_MESSAGE);
+            return;
         }
 
         if (!hash.equals(pwd)) {
