@@ -1,4 +1,4 @@
-package panels;
+package ui.panels;
 
 import model.Context;
 

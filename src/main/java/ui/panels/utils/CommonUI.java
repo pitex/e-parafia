@@ -1,4 +1,4 @@
-package common;
+package ui.panels.utils;
 
 import java.awt.Button;
 import java.awt.Color;

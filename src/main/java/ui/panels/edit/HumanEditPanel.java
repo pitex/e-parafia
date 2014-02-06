@@ -1,4 +1,4 @@
-package panels;
+package ui.panels.edit;
 
 import javax.swing.JPanel;
 
