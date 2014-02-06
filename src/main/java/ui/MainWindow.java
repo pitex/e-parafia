@@ -1,7 +1,7 @@
 package ui;
 
 import model.Context;
-import ui.panels.*;
+import ui.panels.SettingsPanel;
 import ui.panels.edit.ParafianieModificationPanel;
 import ui.panels.edit.WydarzeniaModificationPanel;
 import ui.panels.info.FinanseInfoPanel;
@@ -14,6 +14,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.prefs.Preferences;
 
 /**
  * @author Katarzyna Janocha, Michał Piekarz
@@ -34,7 +35,7 @@ public class MainWindow extends JFrame {
     }
 
     public static void main(String[] args) {
-        Context context = new Context();
+        Context context = new Context(Preferences.userNodeForPackage(MainWindow.class));
 
         final MainWindow mainWindow = new MainWindow("e-parafia welcome to!", context);
 

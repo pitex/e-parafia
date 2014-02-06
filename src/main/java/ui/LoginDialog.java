@@ -11,16 +11,15 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.util.prefs.Preferences;
 
 import static java.awt.Dialog.ModalityType.APPLICATION_MODAL;
+import static security.Encoder.encrypt;
 
 /**
  * @author Katarzyna Janocha, Michał Piekarz
  */
 public class LoginDialog extends JDialog {
 
-    private final Preferences pref = Preferences.userNodeForPackage(LoginDialog.class);
     private final Context context;
     private JTextField loginTextField;
     private JPasswordField pwdTextField;
@@ -44,9 +43,9 @@ public class LoginDialog extends JDialog {
     }
 
     private void initPreferences() {
-        if (pref.get("admin", null) == null) {
+        if (context.getPreferences().get("admin", null) == null) {
             try {
-                pref.put("admin", Encoder.encrypt("admin"));
+                context.getPreferences().put("admin", encrypt("admin"));
             }
             catch (GeneralSecurityException | UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -90,11 +89,11 @@ public class LoginDialog extends JDialog {
         String username = loginTextField.getText();
         String pass = new String(pwdTextField.getPassword());
 
-        String pwd = pref.get(username, null);
+        String pwd = context.getPreferences().get(username, null);
         String hash = "";
 
         try {
-            hash = Encoder.encrypt(pass);
+            hash = encrypt(pass);
         }
         catch (GeneralSecurityException | UnsupportedEncodingException e1) {
             e1.printStackTrace();
@@ -103,7 +102,7 @@ public class LoginDialog extends JDialog {
         if (!hash.equals(pwd)) {
             JOptionPane.showMessageDialog(this, "Wrong login or password", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            context.username = username;
+            context.setUsername(username);
             getOwner().setVisible(true);
             dispose();
         }
