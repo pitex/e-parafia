@@ -17,6 +17,8 @@ public class WydarzeniaInfoPanel extends JPanel {
 		
 		GridBagConstraints c = CommonUI.defaultGridBagConstraints();
 		
+		add(all(), c);
+		add(specified(), c);
 	}
 	
 	private Button all() {
@@ -26,11 +28,6 @@ public class WydarzeniaInfoPanel extends JPanel {
 	
 	private Button specified() {
 		Button b = CommonUI.universalButton("WYSWIETL WYDARZENIA KONKRETNEGO TYPU");
-		return b;
-	}
-	
-	private Button wedding() {
-		Button b = CommonUI.universalButton("WYSWIETL SLUBY");
 		return b;
 	}
 }
