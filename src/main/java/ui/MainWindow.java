@@ -1,6 +1,16 @@
 package ui;
 
 import javax.swing.*;
+
+import db.utils.TableValues.Kaplani;
+
+import panels.FinanseInfoPanel;
+import panels.KsiezaInfoPanel;
+import panels.ParafianieInfoPanel;
+import panels.ParafianieModificationPanel;
+import panels.WydarzeniaInfoPanel;
+import panels.WydarzeniaModificationPanel;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -36,10 +46,10 @@ public class MainWindow extends JFrame {
     private JTabbedPane informationPanel() {
         JTabbedPane tabs = new JTabbedPane();
 
-        tabs.add("PARAFIANIE", InformationPanels.parafianie());
-        tabs.add("WYDARZENIA", InformationPanels.wydarzenia());
-        tabs.add("KSIEZA", InformationPanels.ksieza());
-        tabs.add("FINANSE", InformationPanels.finanse());
+        tabs.add("PARAFIANIE", new ParafianieInfoPanel());
+        tabs.add("WYDARZENIA", new WydarzeniaInfoPanel());
+        tabs.add("KSIEZA", new KsiezaInfoPanel());
+        tabs.add("FINANSE", new FinanseInfoPanel());
 
         return tabs;
     }
@@ -47,10 +57,10 @@ public class MainWindow extends JFrame {
     private JTabbedPane modificationPanel() {
         JTabbedPane tabs = new JTabbedPane();
 
-        tabs.add("PARAFIANIE", ModificationPanels.parafianie());
-        tabs.add("WYDARZENIA", ModificationPanels.wydarzenia());
-        tabs.add("KSIEZA", ModificationPanels.ksieza());
-        tabs.add("FINANSE", ModificationPanels.finanse());
+        tabs.add("PARAFIANIE", new ParafianieModificationPanel());
+        tabs.add("WYDARZENIA", new WydarzeniaModificationPanel());
+        tabs.add("KSIEZA", new KsiezaInfoPanel());
+        tabs.add("FINANSE", new FinanseInfoPanel());
 
         return tabs;
     }
