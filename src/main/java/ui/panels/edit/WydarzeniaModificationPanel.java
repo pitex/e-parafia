@@ -1,4 +1,4 @@
-package panels;
+package ui.panels.edit;
 
 import java.awt.Button;
 import java.awt.GridBagConstraints;
@@ -6,7 +6,7 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
 
-import common.CommonUI;
+import ui.panels.utils.CommonUI;
 
 /**
  * @author Katarzyna Janocha, Michał Piekarz
