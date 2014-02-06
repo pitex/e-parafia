@@ -1,10 +1,11 @@
 package ui;
 
-import javax.swing.*;
-
 import model.Context;
 import panels.*;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -65,11 +66,20 @@ public class MainWindow extends JFrame {
     }
 
     private JTabbedPane mainWindowTabs() {
-        JTabbedPane tabs = new JTabbedPane();
+        final JTabbedPane tabs = new JTabbedPane();
 
         tabs.add("INFORMACJE", informationPanel());
         tabs.add("MODYFIKACJE", modificationPanel());
         tabs.add("USTAWIENIA", new SettingsPanel(context));
+
+        tabs.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                if (tabs.getSelectedIndex() == 2) {
+                    ((SettingsPanel) tabs.getSelectedComponent()).init();
+                }
+            }
+        });
 
         return tabs;
     }
