@@ -1,7 +1,13 @@
 package ui;
 
 import model.Context;
-import panels.*;
+import ui.panels.*;
+import ui.panels.edit.ParafianieModificationPanel;
+import ui.panels.edit.WydarzeniaModificationPanel;
+import ui.panels.info.FinanseInfoPanel;
+import ui.panels.info.KsiezaInfoPanel;
+import ui.panels.info.ParafianieInfoPanel;
+import ui.panels.info.WydarzeniaInfoPanel;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
