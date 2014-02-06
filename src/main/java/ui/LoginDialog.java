@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.prefs.Preferences;
@@ -58,38 +60,53 @@ public class LoginDialog extends JDialog {
         loginButton = new JButton("Login");
         cancelButton = new JButton("Cancel");
 
+        KeyAdapter adapter = new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    checkCredentials();
+                }
+            }
+        };
+
+        loginTextField.addKeyListener(adapter);
+        pwdTextField.addKeyListener(adapter);
+
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String username = loginTextField.getText();
-                String pass = new String(pwdTextField.getPassword());
-
-                String pwd = pref.get(username, null);
-                String hash = "";
-
-                try {
-                    hash = Encoder.encrypt(pass);
-                }
-                catch (GeneralSecurityException | UnsupportedEncodingException e1) {
-                    e1.printStackTrace();
-                }
-
-                if (!hash.equals(pwd)) {
-                    JOptionPane.showMessageDialog(LoginDialog.this, "Wrong login or password", "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    context.username = username;
-                    LoginDialog.this.getOwner().setVisible(true);
-                    LoginDialog.this.dispose();
-                }
+                checkCredentials();
             }
         });
-
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 LoginDialog.this.dispose();
             }
         });
+    }
+
+    private void checkCredentials() {
+        String username = loginTextField.getText();
+        String pass = new String(pwdTextField.getPassword());
+
+        String pwd = pref.get(username, null);
+        String hash = "";
+
+        try {
+            hash = Encoder.encrypt(pass);
+        }
+        catch (GeneralSecurityException | UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        }
+
+        if (!hash.equals(pwd)) {
+            JOptionPane.showMessageDialog(this, "Wrong login or password", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            context.username = username;
+            getOwner().setVisible(true);
+            dispose();
+        }
     }
 
     private void createContentPane() {
