@@ -2,14 +2,8 @@ package ui;
 
 import javax.swing.*;
 
-import db.utils.TableValues.Kaplani;
-
-import panels.FinanseInfoPanel;
-import panels.KsiezaInfoPanel;
-import panels.ParafianieInfoPanel;
-import panels.ParafianieModificationPanel;
-import panels.WydarzeniaInfoPanel;
-import panels.WydarzeniaModificationPanel;
+import model.Context;
+import panels.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,8 +13,11 @@ import java.awt.event.ActionListener;
  */
 public class MainWindow extends JFrame {
 
-    public MainWindow(String title) {
+    private final Context context;
+
+    public MainWindow(String title, Context context) {
         super(title);
+        this.context = context;
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -30,9 +27,11 @@ public class MainWindow extends JFrame {
     }
 
     public static void main(String[] args) {
-        final MainWindow mainWindow = new MainWindow("e-parafia welcome to!");
+        Context context = new Context();
 
-        LoginDialog loginDialog = new LoginDialog(mainWindow);
+        final MainWindow mainWindow = new MainWindow("e-parafia welcome to!", context);
+
+        LoginDialog loginDialog = new LoginDialog(mainWindow, context);
         loginDialog.addCancelButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,8 +68,8 @@ public class MainWindow extends JFrame {
         JTabbedPane tabs = new JTabbedPane();
 
         tabs.add("INFORMACJE", informationPanel());
-
         tabs.add("MODYFIKACJE", modificationPanel());
+        tabs.add("USTAWIENIA", new SettingsPanel(context));
 
         return tabs;
     }
