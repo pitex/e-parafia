@@ -1,5 +1,7 @@
 package ui;
 
+import com.sun.corba.se.spi.orb.StringPair;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
