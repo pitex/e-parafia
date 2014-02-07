@@ -21,42 +21,44 @@ public class Database {
     private static final String USER = "psqlu";
     private static final String PASS = "psqlp";
 
-    public static ResultSet executeQuery(String query) {
+    public static ResultSet executeQueryWithResult(String query) throws SQLException {
         Preferences preferences = Preferences.userNodeForPackage(Database.class);
         if (preferences.get(USER, null) == null) {
             askForCredentials(preferences);
         }
 
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
+        Connection connection;
+        Statement statement;
+        ResultSet resultSet;
 
-        try {
-            connection = getConnection("jdbc:postgresql://localhost/e-parafia",
-                    preferences.get(USER, null), preferences.get(PASS, null));
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+        connection = getConnection("jdbc:postgresql://localhost/e-parafia",
+                preferences.get(USER, null), preferences.get(PASS, null));
+        statement = connection.createStatement();
+        resultSet = statement.executeQuery(query);
 
-            return resultSet;
-        }
-        catch (SQLException e) {
-            showErrorMessage(e);
-        }
-        finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-            }
-            catch (SQLException e) {
-                showErrorMessage(e);
-            }
-        }
+
+        connection.close();
+        statement.close();
 
         return resultSet;
+    }
+
+    public static void executeQuery(String query) throws SQLException {
+        Preferences preferences = Preferences.userNodeForPackage(Database.class);
+        if (preferences.get(USER, null) == null) {
+            askForCredentials(preferences);
+        }
+
+        Connection connection;
+        Statement statement;
+
+        connection = getConnection("jdbc:postgresql://localhost/e-parafia",
+                preferences.get(USER, null), preferences.get(PASS, null));
+        statement = connection.createStatement();
+        statement.executeQuery(query);
+
+        connection.close();
+        statement.close();
     }
 
     private static void askForCredentials(Preferences preferences) {
@@ -73,8 +75,7 @@ public class Database {
                 connection.close();
 
                 break;
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 showErrorMessage(e);
             }
         }

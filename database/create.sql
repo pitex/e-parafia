@@ -1,5 +1,7 @@
 ----   eParafia    ----
 
+BEGIN;
+
 CREATE SEQUENCE ID_SEQ increment by 1 start with 1;
 
 CREATE TABLE KAPLANI (
@@ -10,7 +12,7 @@ CREATE TABLE KAPLANI (
 );
 
 CREATE TABLE POMOCNICY_FUNKCJE (
-	nazwa CONSTRAINT pk_funkcja PRIMARY KEY
+	nazwa varchar(100) CONSTRAINT pk_funkcja PRIMARY KEY
 );
 
 CREATE TABLE PARAFIANIE (
@@ -20,7 +22,7 @@ CREATE TABLE PARAFIANIE (
 	trzecie_imie varchar(100),
 	nazwisko varchar(100) NOT NULL,
 	adres varchar(500),
-	funkcja_pomocnika CONSTRAINT fk_para_fun REFERENCES POMOCNICY_FUNKCJE(nazwa),
+	funkcja_pomocnika varchar(100) CONSTRAINT fk_para_fun REFERENCES POMOCNICY_FUNKCJE(nazwa),
 	zyje boolean DEFAULT TRUE
 );
 
@@ -97,12 +99,12 @@ CREATE VIEW aktywnosci_kaplanow AS
 	SELECT id, 'BIERZMOWANIE' AS typ, pesel_kapl, data FROM bierzmowania UNION ALL
 	SELECT id, 'SLUB' AS typ, pesel_kapl, data FROM sluby UNION ALL
 	SELECT id, 'POGRZEB' AS typ, pesel_kapl, data FROM pogrzeby UNION ALL
-	SELECT id, 'WIZYTA' AS typ, pesel_kapl, data FROM wizyty_duszpasterskie
+	SELECT id, 'WIZYTA' AS typ, pesel_kapl, data FROM wizyty_duszpasterskie UNION ALL
 	SELECT id, 'INTENCJA' AS typ, pesel_kapl, data FROM intencje_mszalne
 	ORDER BY id;
 
 CREATE VIEW chrzty_szczegoly AS 
-	SELECT id, pesel_dziecka, imie, drugie_imie, nazwisko, pesel_matki, pesel_ojca, pesel_matki_chrz, pesel_ojca_chrz, pesel_kapl, data, ofiara
+	SELECT id, pesel_dziecka, imie, drugie_imie, nazwisko, pesel_matki, pesel_ojca, pesel_matki_chrz, pesel_ojca_chrz, pesel_kapl, ofiara, data
 	FROM chrzty INNER JOIN parafianie ON pesel_dziecka = pesel
 	ORDER BY id;
 
@@ -112,10 +114,10 @@ CREATE VIEW bierzmowania_szczegoly AS
 	ORDER BY id;
 
 CREATE VIEW ofiary AS
-	SELECT ofiara, 'CHRZEST' AS typ, data FROM CHRZTY
-	SELECT ofiara, 'SLUB' AS typ, data FROM SLUBY
-	SELECT ofiara, 'POGRZEB' AS typ, data FROM POGRZEBY
-	SELECT ofiara, 'WIZYTA' AS typ, data FROM WIZYTY_DUSZPASTERSKIE
+	SELECT ofiara, 'CHRZEST' AS typ, data FROM CHRZTY UNION ALL
+	SELECT ofiara, 'SLUB' AS typ, data FROM SLUBY UNION ALL
+	SELECT ofiara, 'POGRZEB' AS typ, data FROM POGRZEBY UNION ALL
+	SELECT ofiara, 'WIZYTA' AS typ, data FROM WIZYTY_DUSZPASTERSKIE UNION ALL
 	SELECT ofiara, 'INTENCJA' AS typ, data FROM INTENCJE_MSZALNE
 	ORDER BY data;
 
@@ -176,22 +178,20 @@ LANGUAGE plpgsql;
 -- checks if child is already in parafianie, checks if either of parents is in parafianie, checks god parents' pesels, updates parafianie with child's data if needed
 CREATE OR REPLACE FUNCTION handle_chrzest() RETURNS trigger AS $handle_chrzest$
 BEGIN
-	IF NEW.pesel_dziecka IN (SELECT pesel FROM parafianie) THEN
-		INSERT INTO chrzty VALUES (NEW.id, NEW.pesel_dziecka, NEW.pesel_matki, NEW.pesel_ojca, NEW.pesel_matki_chrz, NEW.pesel_ojca_chrz, NEW.pesel_kapl, NEW.data);
-		RETURN NEW;
-	END IF;
-
-	IF NEW.pesel_ojca NOT IN (SELECT pesel FROM parafianie) AND NEW.pesel_matki IN (SELECT pesel FROM parafianie) THEN
-		RAISE EXCEPTION 'Zadne z rodzicow nie jest z parafii';
-	END IF;
-
 	IF 	count_pesel_checksum(NEW.pesel_ojca) != 0 OR count_pesel_checksum(NEW.pesel_matki) != 0 OR 
-		count_pesel_checksum(NEW.pesel_matki_chrz) != 0 OR count_pesel_checksum(NEW.pesel_ojca_chrz) != 0 THEN
+		count_pesel_checksum(NEW.pesel_matki_chrz) != 0 OR count_pesel_checksum(NEW.pesel_ojca_chrz) != 0 OR
+		count_pesel_checksum(NEW.pesel_dziecka) != 0 THEN
 		RAISE EXCEPTION 'Nieprawidlowy pesel';
 	END IF;
 
+
+    IF NEW.pesel_dziecka IN (SELECT pesel FROM parafianie) THEN
+            INSERT INTO chrzty VALUES (NEW.id, NEW.pesel_dziecka, NEW.pesel_matki, NEW.pesel_ojca, NEW.pesel_matki_chrz, NEW.pesel_ojca_chrz, NEW.pesel_kapl, NEW.ofiara, NEW.data);
+    		RETURN NEW;
+    END IF;
+
 	INSERT INTO parafianie (pesel, imie, drugie_imie, nazwisko) VALUES (NEW.pesel_dziecka, NEW.imie, NEW.drugie_imie, NEW.nazwisko);
-	INSERT INTO chrzty VALUES (NEW.id, NEW.pesel_dziecka, NEW.pesel_matki, NEW.pesel_ojca, NEW.pesel_matki_chrz, NEW.pesel_ojca_chrz, NEW.pesel_kapl, NEW.data);
+    INSERT INTO chrzty VALUES (NEW.id, NEW.pesel_dziecka, NEW.pesel_matki, NEW.pesel_ojca, NEW.pesel_matki_chrz, NEW.pesel_ojca_chrz, NEW.pesel_kapl, NEW.ofiara, NEW.data);
 
 	RETURN NEW;
 END;
@@ -298,13 +298,13 @@ INSERT INTO KAPLANI VALUES('78071873913', 'Grzegorz', 'Matecki', 'proboszcz');
 --INSERT INTO POMOCNICY VALUES('11311185216', 'MINISTRANT');
 
 --Ada i Adam biora slub
-INSERT INTO SLUBY VALUES(nextval('ID_SEQ'), '44051418519', '44072055603', '86051317009', '87022855212', '78071873913', date '2001-10-05');
+INSERT INTO SLUBY VALUES(nextval('ID_SEQ'), '44051418519', '44072055603', '86051317009', '87022855212', '78071873913', 1000.0, date '2001-10-05');
 
 --Zbigniew umiera
-INSERT INTO POGRZEBY VALUES(nextval('ID_SEQ'), '44051418519', '82031310309', date '2001-10-06');
+INSERT INTO POGRZEBY VALUES(nextval('ID_SEQ'), '44051418519', '82031310309', 1000.0, date '2001-10-06');
 
 --Adam i Ada chrzcza dziecko
-INSERT INTO chrzty_szczegoly VALUES(nextval('ID_SEQ'), '12231327906', 'Ida', 'Anna', 'Adamska', '44072055603', '44051418519','86051317009', '87022855212', '78071873913', date '2005-10-05');
+INSERT INTO chrzty_szczegoly VALUES(nextval('ID_SEQ'), '12231327906', 'Ida', 'Anna', 'Adamska', '44072055603', '44051418519','86051317009', '87022855212', '78071873913', 100.0, date '2005-10-05');
 
 --Piotr - komunia
 INSERT INTO PIERWSZE_KOMUNIE VALUES(nextval('ID_SEQ'), '11311185216', '78071873913', date '2005-10-05');
@@ -313,5 +313,7 @@ INSERT INTO PIERWSZE_KOMUNIE VALUES(nextval('ID_SEQ'), '11311185216', '780718739
 INSERT INTO bierzmowania_szczegoly VALUES(nextval('ID_SEQ'), '13282273710', 'Igor', '44072055603', '78071873913', date '2005-12-05');
 
 --wizyty duszpasterskie
-INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 16', '78071873913', date '2013-12-30');
-INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 15', '82031310309', date '2013-12-30');
+INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 16', '78071873913', 9999.99, date '2013-12-30');
+INSERT INTO WIZYTY_DUSZPASTERSKIE VALUES(nextval('ID_SEQ'), 'Torfowa 15', '82031310309', 9999.99, date '2013-12-30');
+
+COMMIT;

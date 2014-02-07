@@ -37,9 +37,9 @@ public class KsiezaInfoPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				InfoTable table = new InfoTable(Database.executeQuery(new QueryBuilder().
-						select(TableColumns.Common.ALL).from(Tables.KAPLANI).build()));
-				table.setVisible(true);
+//				InfoTable table = new InfoTable(Database.executeQueryWithResult(new QueryBuilder().
+//						select(TableColumns.Common.ALL).from(Tables.KAPLANI).build()));
+//				table.setVisible(true);
 			}
 		});
 		
@@ -53,9 +53,10 @@ public class KsiezaInfoPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				InfoTable table = new InfoTable(Database.executeQuery(new QueryBuilder().
-						select(TableColumns.Common.ALL).from(Tables.AKTYWNOSCI_KAPLANOW).build()));
-				table.setVisible(true);
+//				InfoTable table = new InfoTable(Database.executeQueryWithResult(new QueryBuilder().
+//						select(TableColumns.Common.ALL).from(Tables.).build()));
+				//TODO K
+//				table.setVisible(true);
 			}
 		});
 		

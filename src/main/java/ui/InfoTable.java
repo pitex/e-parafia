@@ -1,10 +1,14 @@
 package ui;
 
+import db.Database;
+import db.queries.QueryBuilder;
 import db.utils.QueryPair;
+import db.utils.Tables;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
@@ -14,18 +18,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import static db.utils.TableColumns.TableColumn;
+import static java.awt.BorderLayout.EAST;
+import static java.awt.BorderLayout.NORTH;
+import static java.awt.FlowLayout.RIGHT;
+
 /**
  * @author Katarzyna Janocha, Michał Piekarz
  *         Table showing selected rows.
  */
 public class InfoTable extends JPanel {
 
+    private Tables tableName;
     private JTable table;
     private JButton editButton;
     private JButton removeButton;
 
-    public InfoTable(ResultSet rowData) {
+    public InfoTable(Tables tableName, ResultSet rowData) {
         super();
+
+        this.tableName = tableName;
 
         createComponents(rowData);
 
@@ -84,23 +96,50 @@ public class InfoTable extends JPanel {
     }
 
     private void initUI() {
+        setLayout(new BorderLayout());
 
+        JPanel panel = new JPanel(new FlowLayout(RIGHT, 5, 5));
+        panel.add(editButton);
+        panel.add(removeButton);
+
+        add(table, NORTH);
+        add(panel, EAST);
     }
 
     private void edit() {
+        List<QueryPair> pairs = getSelectedRow();
+        TableColumn[] names = new TableColumn[pairs.size()];
 
+        for (int i = 0; i < pairs.size(); i++) {
+            names[i] = pairs.get(i).getKey();
+        }
+
+        EditDialog dialog = new EditDialog((Frame) getTopLevelAncestor(), tableName, pairs, names);
+        dialog.setVisible(true);
     }
 
     private void remove() {
+        int it = table.getSelectedRow();
+
+        List<QueryPair> row = getSelectedRow()
+                ;
+        QueryBuilder qb = new QueryBuilder();
+        String query = qb.deleteFrom(tableName).where(row.get(0).getKey() + " = " + row.get(0).getValue()).build();
+
+        Database.executeQueryWithResult(query);
+
+        ((InfoTableModel) table.getModel()).removeRow(it);
+        table.revalidate();
+        this.revalidate();
     }
 
     @SuppressWarnings("unchecked")
     private List<QueryPair> getSelectedRow() {
         int row = table.getSelectedRow();
-        Vector<Vector> vec = ((InfoTableModel)table.getModel()).getDataVector();
+        Vector<Vector> vec = ((InfoTableModel) table.getModel()).getDataVector();
         List<QueryPair> pairs = new ArrayList<>();
 
-        for (int i=0; i<table.getModel().getColumnCount(); i++) {
+        for (int i = 0; i < table.getModel().getColumnCount(); i++) {
             pairs.add(new QueryPair(table.getModel().getColumnName(i), vec.get(row).get(i)));
         }
 
