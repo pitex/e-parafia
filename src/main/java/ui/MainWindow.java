@@ -1,6 +1,7 @@
 package ui;
 
 import ui.panels.SettingsPanel;
+import ui.panels.edit.KsiezaModificationPanel;
 import ui.panels.edit.ParafianieModificationPanel;
 import ui.panels.edit.WydarzeniaModificationPanel;
 import ui.panels.info.FinanseInfoPanel;
@@ -60,8 +61,7 @@ public class MainWindow extends JFrame {
 
         tabs.add("PARAFIANIE", new ParafianieModificationPanel());
         tabs.add("WYDARZENIA", new WydarzeniaModificationPanel());
-        tabs.add("KSIEZA", new KsiezaInfoPanel());
-        tabs.add("FINANSE", new FinanseInfoPanel());
+        tabs.add("KSIEZA", new KsiezaModificationPanel());
 
         return tabs;
     }

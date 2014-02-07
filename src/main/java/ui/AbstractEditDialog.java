@@ -40,6 +40,8 @@ public abstract class AbstractEditDialog extends JDialog {
         createComponents();
 
         createContentPane();
+        
+        pack();
     }
 
     private void createComponents() {
@@ -62,7 +64,7 @@ public abstract class AbstractEditDialog extends JDialog {
 
         for (TableColumn name : names) {
             JLabel label = new JLabel(name.toString().toLowerCase());
-            JTextField textField = new JTextField(20);
+            JTextField textField = new JTextField(15);
 
             textFields.add(textField);
 
@@ -76,10 +78,14 @@ public abstract class AbstractEditDialog extends JDialog {
         }
 
         c.gridx = 0;
-        c.anchor = CENTER;
+        c.anchor = EAST;
         panel.add(submitButton, c);
 
         c.gridx = 1;
+        c.anchor = WEST;
         panel.add(cancelButton, c);
+        
+        setLayout(new FlowLayout(FlowLayout.LEFT,5,5));
+        add(panel);
     }
 }
