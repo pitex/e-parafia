@@ -1,12 +1,12 @@
 package db.queries;
 
 import db.utils.QueryPair;
+import db.utils.TableColumns;
 import db.utils.Tables;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static db.utils.TableValues.TableValue;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
@@ -15,11 +15,11 @@ import static java.util.Arrays.asList;
  */
 public class QueryBuilder {
 
-    public SelectBuilder select(TableValue... columns) {
+    public SelectBuilder select(TableColumns.TableColumn... columns) {
         return select(asList(columns));
     }
 
-    public SelectBuilder select(List<TableValue> columns) {
+    public SelectBuilder select(List<TableColumns.TableColumn> columns) {
         return new SelectBuilder(columns);
     }
 
@@ -37,12 +37,12 @@ public class QueryBuilder {
 
     private class SelectBuilder {
 
-        private final List<TableValue> columns;
+        private final List<TableColumns.TableColumn> columns;
         private String condition = null;
         private Tables table;
 
-        public SelectBuilder(List<TableValue> columns) {
-            this.columns = new ArrayList<TableValue>();
+        public SelectBuilder(List<TableColumns.TableColumn> columns) {
+            this.columns = new ArrayList<TableColumns.TableColumn>();
             this.columns.addAll(columns);
         }
 

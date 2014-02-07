@@ -1,21 +1,20 @@
 package db.utils;
 
 import static db.utils.ColumnTypes.*;
-import static db.utils.TableValues.TableValue;
 
 /**
  * @author Katarzyna Janocha, Michał Piekarz
  */
 public class QueryPair {
-	private final TableValue key;
+	private final TableColumns.TableColumn key;
 	private final Object value;
 
-	public QueryPair(TableValue key, Object value) {
+	public QueryPair(TableColumns.TableColumn key, Object value) {
 		this.key = key;
 		this.value = value;
 	}
 
-	public TableValue getKey() {
+	public TableColumns.TableColumn getKey() {
 		return key;
 	}
 

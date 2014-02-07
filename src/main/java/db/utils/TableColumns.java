@@ -5,8 +5,8 @@ import static db.utils.ColumnTypes.*;
 /**
  * @author Katarzyna Janocha, Michał Piekarz
  */
-public class TableValues {
-    public static enum Common implements TableValue {
+public class TableColumns {
+    public static enum Common implements TableColumn {
         ALL;
 
         @Override
@@ -20,7 +20,7 @@ public class TableValues {
         }
     }
 
-    public static enum Parafianie implements TableValue {
+    public static enum Parafianie implements TableColumn {
         PESEL, IMIE, DRUGIE_IMIE, TRZECIE_IMIE, NAZWISKO, ADRES, FUNKCJA_POMOCNIKA, ZYJE;
 
         @Override
@@ -42,7 +42,7 @@ public class TableValues {
         }
     }
 
-    public static enum Kaplani implements TableValue {
+    public static enum Kaplani implements TableColumn {
         PESEL, IMIE, NAZWISKO, FUNKCJA;
 
         @Override
@@ -59,7 +59,7 @@ public class TableValues {
         }
     }
 
-    public static enum PomocnicyFunkcje implements TableValue {
+    public static enum PomocnicyFunkcje implements TableColumn {
         NAZWA;
 
         @Override
@@ -73,7 +73,7 @@ public class TableValues {
         }
     }
 
-    public static enum Chrzty implements TableValue {
+    public static enum Chrzty implements TableColumn {
         ID, PESEL_DZIECKA, PESEL_MATKI, PESEL_OJCA, PESEL_MATKI_CHRZ, PESEL_OJCA_CHRZ, PESEL_KAPL, OFIARA, DATA;
 
         @Override
@@ -97,7 +97,7 @@ public class TableValues {
         }
     }
 
-    public static enum PierwszeKomunie implements TableValue {
+    public static enum PierwszeKomunie implements TableColumn {
         ID, PESEL, PESEL_KAPL, DATA;
 
         @Override
@@ -116,7 +116,7 @@ public class TableValues {
         }
     }
 
-    public static enum Bierzmowania implements TableValue {
+    public static enum Bierzmowania implements TableColumn {
         ID, PESEL, PESEL_SWIADKA, PESEL_KAPL, DATA;
 
         @Override
@@ -136,7 +136,7 @@ public class TableValues {
         }
     }
 
-    public static enum Sluby implements TableValue {
+    public static enum Sluby implements TableColumn {
         ID, PESEL_ZONY, PESEL_MEZA, PESEL_SWIADKA_ZONY, PESEL_SWIADKA_MEZA, PESEL_KAPL, OFIARA, DATA;
 
         @Override
@@ -159,7 +159,7 @@ public class TableValues {
         }
     }
 
-    public static enum Pogrzeby implements TableValue {
+    public static enum Pogrzeby implements TableColumn {
         ID, PESEL, PESEL_KAPL, OFIARA, DATA;
 
         @Override
@@ -179,7 +179,7 @@ public class TableValues {
         }
     }
 
-    public static enum WizytyDuszpasterskie implements TableValue {
+    public static enum WizytyDuszpasterskie implements TableColumn {
         ID, ADRES, PESEL_KAPL, OFIARA, DATA;
 
         @Override
@@ -199,7 +199,7 @@ public class TableValues {
         }
     }
 
-    public static enum IntencjeMszalne implements TableValue {
+    public static enum IntencjeMszalne implements TableColumn {
         ID, OPIS, PESEL_KAPL, OFIARA, DATA;
 
         @Override
@@ -219,7 +219,7 @@ public class TableValues {
         }
     }
 
-    public static interface TableValue {
+    public static interface TableColumn {
         public char getType();
     }
 }
