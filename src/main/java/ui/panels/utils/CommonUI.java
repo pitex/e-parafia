@@ -7,6 +7,11 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+import ui.InfoTable;
+
+import db.Database;
+import db.queries.QueryBuilder;
+import db.utils.TableColumns;
 import db.utils.Tables;
 
 public class CommonUI {
@@ -35,4 +40,11 @@ public class CommonUI {
 		}
 		return s;
 	}
+	
+	public static void selectAllFrom(Tables t) {
+		InfoTable table = new InfoTable(Database.executeQuery(new QueryBuilder().
+				select(TableColumns.Common.ALL).from(t).build()));
+		table.setVisible(true);
+	}
+	
 }
