@@ -17,8 +17,8 @@ import static java.util.Arrays.asList;
 /**
  * @author Katarzyna Janocha, Michał Piekarz
  *         <p/>
- *         This is the main adding class,
- *         which means pressing all buttons responsible for adding new item to the database
+ *         This is the main adding and editing class,
+ *         which means pressing all buttons responsible for adding or changing item in the database
  *         results in showing this dialog. The user has to fill it.
  */
 public abstract class AbstractEditDialog extends JDialog {
