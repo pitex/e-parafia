@@ -2,6 +2,8 @@ package ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -16,9 +18,10 @@ public class InfoTable extends JTable {
 	
 	private JButton editButton;
 	private JButton removeButton;
+	private static String[] names;
 	
-	public InfoTable(Object[][] rowData, String[] names) {
-		super(rowData, names);
+	public InfoTable(ResultSet rowData) {
+		super(parseRowDataToObjects(rowData), names);
 		
 		createComponents();
 	}
@@ -42,6 +45,18 @@ public class InfoTable extends JTable {
 				remove();
 			}
 		});
+	}
+	
+	private static Object[][] parseRowDataToObjects(ResultSet rowData) {
+		Object [][] res;
+		try {
+			while(rowData.next()) {
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
 	}
 	
 	private void edit() {

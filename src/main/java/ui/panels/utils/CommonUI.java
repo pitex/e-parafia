@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+import db.utils.Tables;
+
 public class CommonUI {
 	public static Dimension BUTTON_DIMENSION = new Dimension(1000,90);
 	
@@ -24,5 +26,13 @@ public class CommonUI {
 		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(2,2,3,3);
 		return c;
+	}
+	
+	public static String[] tablesValuesAsStringArray(Tables[] t) {
+		String s[] = new String[t.length];
+		for (int i = 0; i < t.length; i++) {
+			s[i] = t.toString();
+		}
+		return s;
 	}
 }
