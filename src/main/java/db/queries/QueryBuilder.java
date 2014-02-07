@@ -203,7 +203,7 @@ public class QueryBuilder {
                     sb.append(", %s = %s");
                 }
                 if (condition != null) {
-                    sb.append("WHERE %s");
+                    sb.append(" WHERE %s");
                 }
                 sb.append(";");
 

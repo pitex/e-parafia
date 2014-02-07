@@ -48,7 +48,7 @@ public class QueryPair {
             case STRING:
                 return "'" + value.toString() + "'";
             case BOOLEAN:
-                if ((Boolean) value) {
+                if (value.toString().toLowerCase().equals("true")) {
                     return "TRUE";
                 }
                 return "FALSE";
