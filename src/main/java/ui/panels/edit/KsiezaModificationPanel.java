@@ -25,6 +25,7 @@ public class KsiezaModificationPanel extends JPanel {
 	private Button addElement() {
 		Button b = CommonUI.universalButton("DODAJ KAPLANA");
 		
+		
 		return b;
 	}
 	
