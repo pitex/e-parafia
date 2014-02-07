@@ -4,9 +4,18 @@ import model.Context;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static java.awt.FlowLayout.LEFT;
 import static java.awt.GridBagConstraints.*;
+import static javax.swing.JOptionPane.*;
+import static security.Encoder.encrypt;
 
 /**
  * @author Katarzyna Janocha, Michał Piekarz
@@ -14,6 +23,7 @@ import static java.awt.GridBagConstraints.*;
 public class SettingsPanel extends JPanel {
 
     private final Context context;
+    private List<Component> adminComponents;
     private JLabel usernameLabel;
     private JButton newUserButton;
     private JButton changePasswordButton;
@@ -27,6 +37,7 @@ public class SettingsPanel extends JPanel {
     public SettingsPanel(Context context) {
         super();
 
+        this.adminComponents = new ArrayList<>();
         this.context = context;
 
         initComponents();
@@ -36,7 +47,13 @@ public class SettingsPanel extends JPanel {
     }
 
     public void init() {
-        usernameLabel.setText("Użytkownik: " + context.username);
+        usernameLabel.setText("Użytkownik: " + context.getUsername());
+
+        boolean vis = context.getUsername().equals("admin");
+
+        for (Component component : adminComponents) {
+            component.setEnabled(vis);
+        }
     }
 
     private JPanel createPanel() {
@@ -116,5 +133,101 @@ public class SettingsPanel extends JPanel {
         newPasswordField2.setMinimumSize(newPasswordField2.getPreferredSize());
         newUserPasswordField.setMinimumSize(newUserPasswordField.getPreferredSize());
         newUserPasswordField2.setMinimumSize(newUserPasswordField2.getPreferredSize());
+
+        adminComponents.addAll(Arrays.asList(newUserButton, newUserPasswordField, newUserPasswordField2, newUserTextField));
+
+        addListeners();
+    }
+
+    private void addListeners() {
+        changePasswordButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleChangePassword();
+            }
+        });
+        newUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleNewUser();
+            }
+        });
+    }
+
+    private void handleChangePassword() {
+        String oldPass = new String(oldPasswordField.getPassword());
+        String newPass = new String(newPasswordField.getPassword());
+        String newPass2 = new String(newPasswordField2.getPassword());
+        String pwd = context.getPreferences().get(context.getUsername(), null);
+        String hash;
+
+        try {
+            hash = encrypt(oldPass);
+        }
+        catch (GeneralSecurityException | UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+            showMessageDialog(this, e1.getMessage(), "Error", ERROR_MESSAGE);
+            return;
+        }
+
+        if (!hash.equals(pwd)) {
+            showMessageDialog(this, "Zły login lub hasło!", "Error", ERROR_MESSAGE);
+            return;
+        }
+        if (!newPass.equals(newPass2)) {
+            showMessageDialog(this, "Hasła się nie zgadzają!", "Error", ERROR_MESSAGE);
+            return;
+        }
+        if (newPass.length() < 3) {
+            showMessageDialog(this, "Zbyt krótkie hasło!", "Error", ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            context.getPreferences().put(context.getUsername(), encrypt(newPass));
+        }
+        catch (GeneralSecurityException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+            showMessageDialog(this, e.getMessage(), "Error", ERROR_MESSAGE);
+            return;
+        }
+
+        oldPasswordField.setText("");
+        newPasswordField.setText("");
+        newPasswordField2.setText("");
+        showMessageDialog(this, "Zmieniono hasło!", "", INFORMATION_MESSAGE);
+    }
+
+    private void handleNewUser() {
+        String username = newUserTextField.getText();
+        String pass = new String(newUserPasswordField.getPassword());
+        String pass2 = new String(newUserPasswordField2.getPassword());
+
+        if (username.length() < 4) {
+            showMessageDialog(this, "Nazwa użytkownika musi mieć przynajmniej 4 litery", "Error", ERROR_MESSAGE);
+            return;
+        }
+        if (!pass.equals(pass2)) {
+            showMessageDialog(this, "Hasła się nie zgadzają", "Error", ERROR_MESSAGE);
+            return;
+        }
+        if (pass.length() < 3) {
+            showMessageDialog(this, "Zbyt krótkie hasło!", "Error", ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            context.getPreferences().put(username, encrypt(pass));
+        }
+        catch (GeneralSecurityException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+            showMessageDialog(this, e.getMessage(), "Error", ERROR_MESSAGE);
+            return;
+        }
+
+        newUserTextField.setText("");
+        newUserPasswordField.setText("");
+        newUserPasswordField2.setText("");
+        showMessageDialog(this, "Utworzono nowego użytkownika!", "", INFORMATION_MESSAGE);
     }
 }
