@@ -26,28 +26,6 @@ public class ParafianieModificationPanel extends JPanel {
 		GridBagConstraints c = CommonUI.defaultGridBagConstraints();
 		
 		add(addElement(), c);
-		add(edit(), c);
-		add(dead(), c);
-		add(remove(), c);
-	}
-	
-	private Button edit() {
-		Button b = CommonUI.universalButton("EDYTUJ DANE PARAFIANINA");
-		
-		b.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				EditDialog dialog = new EditDialog(
-						(Frame)ParafianieModificationPanel.this.getTopLevelAncestor(),
-						Tables.PARAFIANIE,
-						TableColumns.Parafianie.values()
-						);
-				dialog.setVisible(true);
-			}
-		});
-		
-		return b;
 	}
 	
 	private Button addElement() {
@@ -65,18 +43,6 @@ public class ParafianieModificationPanel extends JPanel {
 				dialog.setVisible(true);
 			}
 		});
-		
-		return b;
-	}
-	
-	private Button dead() {
-		Button b = CommonUI.universalButton("ZGON PARAFIANINA");
-		
-		return b;
-	}
-	
-	private Button remove() {
-		Button b = CommonUI.universalButton("USUN PARAFIANINA");
 		
 		return b;
 	}

@@ -132,6 +132,8 @@ public class QueryBuilder {
             }
 
             public String build() {
+                removeEmpty(pairs);
+
                 StringBuilder sb = new StringBuilder();
                 sb.append("INSERT INTO %s(%s");
                 for (int i = 0; i < pairs.size() - 1; i++) {
@@ -192,6 +194,8 @@ public class QueryBuilder {
             }
 
             public String build() {
+                removeEmpty(setPairs);
+
                 StringBuilder sb = new StringBuilder();
 
                 sb.append("UPDATE %s SET %s = %s");
@@ -256,6 +260,19 @@ public class QueryBuilder {
 
                 return format(sb.toString(), from, condition);
             }
+        }
+    }
+
+    private void removeEmpty(List<QueryPair> pairs) {
+        List<Integer> toRemove = new ArrayList<>();
+        for (int i=0; i<pairs.size(); i++) {
+            if (pairs.get(i).getValue() == null || pairs.get(i).getValue().equals("")) {
+                toRemove.add(i);
+            }
+        }
+
+        for (int i=toRemove.size()-1; i>=0; i--) {
+            pairs.remove((int)toRemove.get(i));
         }
     }
 }

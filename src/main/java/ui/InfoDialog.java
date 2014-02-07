@@ -21,27 +21,37 @@ import java.util.Vector;
 import static db.utils.TableColumns.TableColumn;
 import static java.awt.BorderLayout.EAST;
 import static java.awt.BorderLayout.NORTH;
+import static java.awt.Dialog.ModalityType.APPLICATION_MODAL;
 import static java.awt.FlowLayout.RIGHT;
+import static javax.swing.JOptionPane.*;
 
 /**
  * @author Katarzyna Janocha, Michał Piekarz
  *         Table showing selected rows.
  */
-public class InfoTable extends JPanel {
+public class InfoDialog extends JDialog {
 
     private Tables tableName;
     private JTable table;
     private JButton editButton;
     private JButton removeButton;
+    private boolean editable;
 
-    public InfoTable(Tables tableName, ResultSet rowData) {
+    public InfoDialog(Tables tableName, ResultSet rowData, boolean editable) {
         super();
 
         this.tableName = tableName;
+        this.editable = editable;
+
+        setModalityType(APPLICATION_MODAL);
 
         createComponents(rowData);
 
         initUI();
+    }
+
+    public InfoDialog(Tables tableName, ResultSet rowData) {
+        this(tableName, rowData, true);
     }
 
     private static TableModel buildTableModel(ResultSet rs) {
@@ -76,8 +86,12 @@ public class InfoTable extends JPanel {
     private void createComponents(ResultSet rowData) {
         editButton = new JButton("EDYTUJ");
         removeButton = new JButton("USUŃ");
+
         table = new JTable(buildTableModel(rowData));
         table.setRowSelectionAllowed(true);
+
+        editButton.setEnabled(editable);
+        removeButton.setEnabled(editable);
 
         editButton.addActionListener(new ActionListener() {
 
@@ -104,6 +118,8 @@ public class InfoTable extends JPanel {
 
         add(table, NORTH);
         add(panel, EAST);
+
+        pack();
     }
 
     private void edit() {
@@ -114,19 +130,24 @@ public class InfoTable extends JPanel {
             names[i] = pairs.get(i).getKey();
         }
 
-        EditDialog dialog = new EditDialog((Frame) getTopLevelAncestor(), tableName, pairs, names);
+        EditDialog dialog = new EditDialog((Frame) this.getOwner(), tableName, pairs, names);
         dialog.setVisible(true);
     }
 
     private void remove() {
         int it = table.getSelectedRow();
 
-        List<QueryPair> row = getSelectedRow()
-                ;
+        List<QueryPair> row = getSelectedRow();
         QueryBuilder qb = new QueryBuilder();
-        String query = qb.deleteFrom(tableName).where(row.get(0).getKey() + " = " + row.get(0).getValue()).build();
+        String query = qb.deleteFrom(tableName).where(row.get(0).getKey() + " = " + row.get(0).getFormattedValue()).build();
 
-        Database.executeQueryWithResult(query);
+        try {
+            Database.executeQuery(query);
+            showMessageDialog(this, "Usunięto!", "EUREKA", INFORMATION_MESSAGE);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showMessageDialog(this, e.getMessage(), "ERROR", ERROR_MESSAGE);
+        }
 
         ((InfoTableModel) table.getModel()).removeRow(it);
         table.revalidate();
@@ -140,7 +161,12 @@ public class InfoTable extends JPanel {
         List<QueryPair> pairs = new ArrayList<>();
 
         for (int i = 0; i < table.getModel().getColumnCount(); i++) {
-            pairs.add(new QueryPair(table.getModel().getColumnName(i), vec.get(row).get(i)));
+            Object value = vec.get(row).get(i);
+            if(value == null) {
+                value = "";
+            }
+
+            pairs.add(new QueryPair(table.getModel().getColumnName(i), value));
         }
 
         return pairs;

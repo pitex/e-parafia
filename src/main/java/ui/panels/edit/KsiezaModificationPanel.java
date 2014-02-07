@@ -30,8 +30,6 @@ public class KsiezaModificationPanel extends JPanel {
 		GridBagConstraints c = CommonUI.defaultGridBagConstraints();
 		
 		add(addElement(), c);
-		add(edit(), c);
-		add(remove(), c);
 	}
 	
 	private Button addElement() {
@@ -46,28 +44,6 @@ public class KsiezaModificationPanel extends JPanel {
 				dialog.setVisible(true);
 			}
 		});
-		
-		return b;
-	}
-	
-	private Button edit() {
-		Button b = CommonUI.universalButton("EDYTUJ DANE KAPLANA");
-		
-		b.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				EditDialog dialog = new EditDialog(
-						(Frame)KsiezaModificationPanel.this.getTopLevelAncestor(), Tables.KAPLANI, 
-						TableColumns.Kaplani.values());
-				dialog.setVisible(true);
-			}
-		});
-		
-		return b;
-	}
-	
-	private Button remove() {
-		Button b = CommonUI.universalButton("USUN KAPLANA");
 		
 		return b;
 	}

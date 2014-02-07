@@ -11,12 +11,8 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JPanel;
 
-import db.Database;
-import db.queries.QueryBuilder;
-import db.utils.TableColumns;
 import db.utils.Tables;
 
-import ui.InfoTable;
 import ui.panels.utils.CommonUI;
 
 /**
@@ -38,7 +34,7 @@ public class WydarzeniaInfoPanel extends JPanel {
 		b.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				CommonUI.selectAllFrom(Tables.AKTYWNOSCI_KAPLANOW);
+				CommonUI.selectAllFrom(Tables.AKTYWNOSCI_KAPLANOW, false);
 			}
 		});
 		
@@ -61,7 +57,7 @@ public class WydarzeniaInfoPanel extends JPanel {
 				String selected = c.getSelectedItem();
 				for (int i = 0; i < key.length; i++) {
 					if(selected == key[i]) {
-						CommonUI.selectAllFrom(val[i]);
+						CommonUI.selectAllFrom(val[i], i!=0);
 					}
 				}
 			}

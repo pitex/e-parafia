@@ -36,10 +36,6 @@ public class Database {
         statement = connection.createStatement();
         resultSet = statement.executeQuery(query);
 
-
-        connection.close();
-        statement.close();
-
         return resultSet;
     }
 
@@ -55,7 +51,7 @@ public class Database {
         connection = getConnection("jdbc:postgresql://localhost/e-parafia",
                 preferences.get(USER, null), preferences.get(PASS, null));
         statement = connection.createStatement();
-        statement.executeQuery(query);
+        statement.executeUpdate(query);
 
         connection.close();
         statement.close();
