@@ -162,7 +162,7 @@ public class InfoDialog extends JDialog {
 
         for (int i = 0; i < table.getModel().getColumnCount(); i++) {
             Object value = vec.get(row).get(i);
-            if(value == null) {
+            if (value == null) {
                 value = "";
             }
 

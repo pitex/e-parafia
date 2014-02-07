@@ -160,8 +160,7 @@ public class SettingsPanel extends JPanel {
 
         try {
             hash = encrypt(oldPass);
-        }
-        catch (GeneralSecurityException | UnsupportedEncodingException e1) {
+        } catch (GeneralSecurityException | UnsupportedEncodingException e1) {
             e1.printStackTrace();
             showMessageDialog(this, e1.getMessage(), "Error", ERROR_MESSAGE);
             return;
@@ -182,8 +181,7 @@ public class SettingsPanel extends JPanel {
 
         try {
             getContext().getPreferences().put(getContext().getUsername(), encrypt(newPass));
-        }
-        catch (GeneralSecurityException | UnsupportedEncodingException e) {
+        } catch (GeneralSecurityException | UnsupportedEncodingException e) {
             e.printStackTrace();
             showMessageDialog(this, e.getMessage(), "Error", ERROR_MESSAGE);
             return;
@@ -215,8 +213,7 @@ public class SettingsPanel extends JPanel {
 
         try {
             getContext().getPreferences().put(username, encrypt(pass));
-        }
-        catch (GeneralSecurityException | UnsupportedEncodingException e) {
+        } catch (GeneralSecurityException | UnsupportedEncodingException e) {
             e.printStackTrace();
             showMessageDialog(this, e.getMessage(), "Error", ERROR_MESSAGE);
             return;

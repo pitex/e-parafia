@@ -26,8 +26,8 @@ public class QueryPair {
         for (Class c : clazz.getClasses()) {
             if (TableColumn.class.isAssignableFrom(c)) {
                 try {
-                    return (TableColumn) Enum.valueOf(c,name.toUpperCase());
-                } catch(Exception ignore) {
+                    return (TableColumn) Enum.valueOf(c, name.toUpperCase());
+                } catch (Exception ignore) {
                 }
             }
         }

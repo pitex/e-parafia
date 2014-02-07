@@ -36,6 +36,9 @@ public class Database {
         statement = connection.createStatement();
         resultSet = statement.executeQuery(query);
 
+        connection.close();
+        statement.close();
+
         return resultSet;
     }
 

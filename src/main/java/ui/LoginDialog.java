@@ -1,7 +1,5 @@
 package ui;
 
-import com.sun.corba.se.spi.orb.StringPair;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -46,8 +44,7 @@ public class LoginDialog extends JDialog {
         if (getContext().getPreferences().get("admin", null) == null) {
             try {
                 getContext().getPreferences().put("admin", encrypt("admin"));
-            }
-            catch (GeneralSecurityException | UnsupportedEncodingException e) {
+            } catch (GeneralSecurityException | UnsupportedEncodingException e) {
                 e.printStackTrace();
                 showMessageDialog(this, e.getMessage(), "Error", ERROR_MESSAGE);
             }
@@ -95,8 +92,7 @@ public class LoginDialog extends JDialog {
 
         try {
             hash = encrypt(pass);
-        }
-        catch (GeneralSecurityException | UnsupportedEncodingException e1) {
+        } catch (GeneralSecurityException | UnsupportedEncodingException e1) {
             e1.printStackTrace();
             showMessageDialog(this, e1.getMessage(), "Error", ERROR_MESSAGE);
             return;

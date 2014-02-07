@@ -3,7 +3,6 @@ package ui;
 import ui.panels.SettingsPanel;
 import ui.panels.edit.KsiezaModificationPanel;
 import ui.panels.edit.ParafianieModificationPanel;
-import ui.panels.edit.WydarzeniaAddPanel;
 import ui.panels.edit.WydarzeniaModificationPanel;
 import ui.panels.info.FinanseInfoPanel;
 import ui.panels.info.KsiezaInfoPanel;

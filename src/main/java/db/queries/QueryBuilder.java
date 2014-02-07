@@ -265,14 +265,14 @@ public class QueryBuilder {
 
     private void removeEmpty(List<QueryPair> pairs) {
         List<Integer> toRemove = new ArrayList<>();
-        for (int i=0; i<pairs.size(); i++) {
+        for (int i = 0; i < pairs.size(); i++) {
             if (pairs.get(i).getValue() == null || pairs.get(i).getValue().equals("")) {
                 toRemove.add(i);
             }
         }
 
-        for (int i=toRemove.size()-1; i>=0; i--) {
-            pairs.remove((int)toRemove.get(i));
+        for (int i = toRemove.size() - 1; i >= 0; i--) {
+            pairs.remove((int) toRemove.get(i));
         }
     }
 }

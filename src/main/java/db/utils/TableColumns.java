@@ -218,108 +218,108 @@ public class TableColumns {
             return 0;
         }
     }
-    
-    public static enum Zmarli implements TableColumn {
-    	PESEL, IMIE, NAZWISKO, ADRES, DATA;
 
-		@Override
-		public char getType() {
-			switch(this) {
-				case PESEL:
-				case IMIE:
-				case NAZWISKO:
-            	case ADRES:
-            		return STRING;
-            	case DATA:
-            		return DATE;
-			}
-			return 0;
-		}
+    public static enum Zmarli implements TableColumn {
+        PESEL, IMIE, NAZWISKO, ADRES, DATA;
+
+        @Override
+        public char getType() {
+            switch (this) {
+                case PESEL:
+                case IMIE:
+                case NAZWISKO:
+                case ADRES:
+                    return STRING;
+                case DATA:
+                    return DATE;
+            }
+            return 0;
+        }
     }
 
     public static enum AktywnosciKaplanow implements TableColumn {
-    	ID, TYP, PESEL_KAPL, DATA;
+        ID, TYP, PESEL_KAPL, DATA;
 
-		@Override
-		public char getType() {
-			switch(this) {
-				case ID:
-					return INTEGER;
-				case PESEL_KAPL:
-				case TYP:
-					return STRING;
-				case DATA:
-					return DATE;
-			}
-			return 0;
-		}
+        @Override
+        public char getType() {
+            switch (this) {
+                case ID:
+                    return INTEGER;
+                case PESEL_KAPL:
+                case TYP:
+                    return STRING;
+                case DATA:
+                    return DATE;
+            }
+            return 0;
+        }
     }
-    
+
     public static enum ChrztySzczegoly implements TableColumn {
-    	ID, PESEL_DZIECKA, IMIE, DRUGIE_IMIE, NAZWISKO, PESEL_MATKI, PESEL_OJCA, PESEL_MATKI_CHRZ, PESEL_OJCA_CHRZ, PESEL_KAPL, DATA, OFIARA;
+        ID, PESEL_DZIECKA, IMIE, DRUGIE_IMIE, NAZWISKO, PESEL_MATKI, PESEL_OJCA, PESEL_MATKI_CHRZ, PESEL_OJCA_CHRZ, PESEL_KAPL, DATA, OFIARA;
 
-		@Override
-		public char getType() {
-			switch(this) {
-				case ID:
-				case OFIARA:
-					return INTEGER;
-				case PESEL_DZIECKA:
-				case IMIE:
-				case DRUGIE_IMIE:
-				case NAZWISKO:
-				case PESEL_MATKI:
-				case PESEL_OJCA:
-				case PESEL_MATKI_CHRZ:
-				case PESEL_OJCA_CHRZ:
-				case PESEL_KAPL:
-					return STRING;
-            	case DATA:
-            		return DATE;
+        @Override
+        public char getType() {
+            switch (this) {
+                case ID:
+                case OFIARA:
+                    return INTEGER;
+                case PESEL_DZIECKA:
+                case IMIE:
+                case DRUGIE_IMIE:
+                case NAZWISKO:
+                case PESEL_MATKI:
+                case PESEL_OJCA:
+                case PESEL_MATKI_CHRZ:
+                case PESEL_OJCA_CHRZ:
+                case PESEL_KAPL:
+                    return STRING;
+                case DATA:
+                    return DATE;
 
-			}
-			return 0;
-		}
-    }  
-	
+            }
+            return 0;
+        }
+    }
+
     public static enum BierzmowaniaSzczegoly implements TableColumn {
-    	ID, PESEL, TRZECIE_IMIE, PESEL_SWIADKA, PESEL_KAPL, DATA;
+        ID, PESEL, TRZECIE_IMIE, PESEL_SWIADKA, PESEL_KAPL, DATA;
 
-		@Override
-		public char getType() {
-			switch(this) {
-				case ID:
-				case PESEL:
-				case TRZECIE_IMIE:
-				case PESEL_SWIADKA:
-				case PESEL_KAPL:
-					return STRING;
-            	case DATA:
-            		return DATE;
+        @Override
+        public char getType() {
+            switch (this) {
+                case ID:
+                case PESEL:
+                case TRZECIE_IMIE:
+                case PESEL_SWIADKA:
+                case PESEL_KAPL:
+                    return STRING;
+                case DATA:
+                    return DATE;
 
-			}
-			return 0;
-		}
-    }  
-    
+            }
+            return 0;
+        }
+    }
+
     public static enum Ofiary implements TableColumn {
-    	OFIARA, TYP, DATA;
+        OFIARA, TYP, DATA;
 
-		@Override
-		public char getType() {
-			switch(this) {
-				case OFIARA:
-					return INTEGER;
-				case TYP:
-					return STRING;
-            	case DATA:
-            		return DATE;
+        @Override
+        public char getType() {
+            switch (this) {
+                case OFIARA:
+                    return INTEGER;
+                case TYP:
+                    return STRING;
+                case DATA:
+                    return DATE;
 
-			}
-			return 0;
-		}
-    } 
-    
+            }
+            return 0;
+        }
+    }
+
     public static enum Pomocnicy implements TableColumn {
         PESEL, IMIE, DRUGIE_IMIE, TRZECIE_IMIE, NAZWISKO, ADRES, FUNKCJA_POMOCNIKA, ZYJE;
 
@@ -341,7 +341,7 @@ public class TableColumns {
             return 0;
         }
     }
-    
+
     public static enum Ministranci implements TableColumn {
         PESEL, IMIE, DRUGIE_IMIE, TRZECIE_IMIE, NAZWISKO, ADRES, FUNKCJA_POMOCNIKA, ZYJE;
 
@@ -363,7 +363,7 @@ public class TableColumns {
             return 0;
         }
     }
-    
+
     public static enum Lektorzy implements TableColumn {
         PESEL, IMIE, DRUGIE_IMIE, TRZECIE_IMIE, NAZWISKO, ADRES, FUNKCJA_POMOCNIKA, ZYJE;
 
@@ -385,7 +385,7 @@ public class TableColumns {
             return 0;
         }
     }
-    
+
     public static enum Szafarze implements TableColumn {
         PESEL, IMIE, DRUGIE_IMIE, TRZECIE_IMIE, NAZWISKO, ADRES, FUNKCJA_POMOCNIKA, ZYJE;
 
@@ -407,7 +407,7 @@ public class TableColumns {
             return 0;
         }
     }
-    
+
     public static interface TableColumn {
         public char getType();
     }
