@@ -35,14 +35,14 @@ public class QueryBuilder {
         return new DeleteBuilder(table);
     }
 
-    private class SelectBuilder {
+    public class SelectBuilder {
 
         private final List<TableColumns.TableColumn> columns;
         private String condition = null;
         private Tables table;
 
-        public SelectBuilder(List<TableColumns.TableColumn> columns) {
-            this.columns = new ArrayList<TableColumns.TableColumn>();
+        private SelectBuilder(List<TableColumns.TableColumn> columns) {
+            this.columns = new ArrayList<>();
             this.columns.addAll(columns);
         }
 
@@ -56,7 +56,10 @@ public class QueryBuilder {
             return new SelectConditions();
         }
 
-        private class SelectConditions {
+        public class SelectConditions {
+
+            private SelectConditions() {
+            }
 
             public SelectFinalization where(String condition) {
                 SelectBuilder.this.condition = condition;
@@ -88,7 +91,10 @@ public class QueryBuilder {
                 return format(sb.toString(), args);
             }
 
-            private class SelectFinalization {
+            public class SelectFinalization {
+
+                private SelectFinalization() {
+                }
 
                 public String build() {
                     return SelectConditions.this.build();
@@ -97,12 +103,12 @@ public class QueryBuilder {
         }
     }
 
-    private class InsertBuilder {
+    public class InsertBuilder {
         private final Tables into;
         private final List<QueryPair> pairs;
 
-        public InsertBuilder(Tables into) {
-            this.pairs = new ArrayList<QueryPair>();
+        private InsertBuilder(Tables into) {
+            this.pairs = new ArrayList<>();
             this.into = into;
         }
 
@@ -120,7 +126,10 @@ public class QueryBuilder {
             return new InsertFinalization();
         }
 
-        private class InsertFinalization {
+        public class InsertFinalization {
+
+            private InsertFinalization() {
+            }
 
             public String build() {
                 StringBuilder sb = new StringBuilder();
@@ -146,14 +155,14 @@ public class QueryBuilder {
         }
     }
 
-    private class UpdateBuilder {
+    public class UpdateBuilder {
 
         private final Tables table;
         private final List<QueryPair> setPairs;
         private String condition;
 
-        public UpdateBuilder(Tables table) {
-            this.setPairs = new ArrayList<QueryPair>();
+        private UpdateBuilder(Tables table) {
+            this.setPairs = new ArrayList<>();
             this.table = table;
         }
 
@@ -171,7 +180,10 @@ public class QueryBuilder {
             return new UpdateConditions();
         }
 
-        private class UpdateConditions {
+        public class UpdateConditions {
+
+            private UpdateConditions() {
+            }
 
             public UpdateFinalization where(String condition) {
                 UpdateBuilder.this.condition = condition;
@@ -202,7 +214,10 @@ public class QueryBuilder {
                 return format(sb.toString(), args);
             }
 
-            private class UpdateFinalization {
+            public class UpdateFinalization {
+
+                private UpdateFinalization() {
+                }
 
                 public String build() {
                     return UpdateConditions.this.build();
@@ -211,11 +226,11 @@ public class QueryBuilder {
         }
     }
 
-    private class DeleteBuilder {
+    public class DeleteBuilder {
         private final Tables from;
         private String condition = null;
 
-        public DeleteBuilder(Tables from) {
+        private DeleteBuilder(Tables from) {
             this.from = from;
         }
 
@@ -225,7 +240,10 @@ public class QueryBuilder {
             return new DeleteFinalization();
         }
 
-        private class DeleteFinalization {
+        public class DeleteFinalization {
+
+            private DeleteFinalization() {
+            }
 
             public String build() {
                 StringBuilder sb = new StringBuilder();
