@@ -3,9 +3,14 @@ package ui.panels.edit;
 import java.awt.Button;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
+import model.Context;
+
+import ui.AddingDialog;
 import ui.panels.utils.CommonUI;
 
 /**
@@ -25,7 +30,15 @@ public class KsiezaModificationPanel extends JPanel {
 	private Button addElement() {
 		Button b = CommonUI.universalButton("DODAJ KAPLANA");
 		
+		String[] names = {""};
 		
+		b.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//AddingDialog dialog = new AddingDialog(this, context, table, names);
+			}
+		});
 		
 		return b;
 	}
