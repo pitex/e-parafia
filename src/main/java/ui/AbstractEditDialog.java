@@ -1,5 +1,6 @@
 package ui;
 
+import db.utils.ColumnTypes;
 import db.utils.Tables;
 
 import javax.swing.*;
@@ -10,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static db.utils.TableColumns.TableColumn;
-import static java.awt.GridBagConstraints.*;
+import static java.awt.GridBagConstraints.EAST;
+import static java.awt.GridBagConstraints.WEST;
 import static java.util.Arrays.asList;
 
 /**
@@ -40,7 +42,7 @@ public abstract class AbstractEditDialog extends JDialog {
         createComponents();
 
         createContentPane();
-        
+
         pack();
     }
 
@@ -63,7 +65,11 @@ public abstract class AbstractEditDialog extends JDialog {
         c.insets = new Insets(2, 2, 3, 3);
 
         for (TableColumn name : names) {
-            JLabel label = new JLabel(name.toString().toLowerCase());
+            if (name.toString().toLowerCase().equals("id")) {
+                continue;
+            }
+
+            JLabel label = new JLabel(name.toString().toLowerCase() + (name.getType() == ColumnTypes.DATE ? "(yyyy-mm-dd)" : ""));
             JTextField textField = new JTextField(15);
 
             textFields.add(textField);
@@ -84,8 +90,8 @@ public abstract class AbstractEditDialog extends JDialog {
         c.gridx = 1;
         c.anchor = WEST;
         panel.add(cancelButton, c);
-        
-        setLayout(new FlowLayout(FlowLayout.LEFT,5,5));
+
+        setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         add(panel);
     }
 }

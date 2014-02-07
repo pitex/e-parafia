@@ -18,9 +18,12 @@ import static javax.swing.JOptionPane.*;
  */
 public class Database {
 
+    private static final String USER = "psqlu";
+    private static final String PASS = "psqlp";
+
     public static ResultSet executeQuery(String query) {
         Preferences preferences = Preferences.userNodeForPackage(Database.class);
-        if (preferences.get("psqlu", null) == null) {
+        if (preferences.get(USER, null) == null) {
             askForCredentials(preferences);
         }
 
@@ -30,7 +33,7 @@ public class Database {
 
         try {
             connection = getConnection("jdbc:postgresql://localhost/e-parafia",
-                    preferences.get("psqlu", null), preferences.get("psqlp", null));
+                    preferences.get(USER, null), preferences.get(PASS, null));
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
 
@@ -64,8 +67,8 @@ public class Database {
             try {
                 connection = getConnection("jdbc:postgresql://localhost/e-parafia", credentials.getFirst(), credentials.getSecond());
 
-                preferences.put("psqlu", credentials.getFirst());
-                preferences.put("psqlp", credentials.getSecond());
+                preferences.put(USER, credentials.getFirst());
+                preferences.put(PASS, credentials.getSecond());
 
                 connection.close();
 
@@ -94,7 +97,6 @@ public class Database {
 
         if (okCxl == OK_OPTION) {
             password = new String(pf.getPassword());
-            System.err.println("You entered: " + password);
         }
 
         return new StringPair(username, password);
