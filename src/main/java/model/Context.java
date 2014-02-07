@@ -1,16 +1,8 @@
 package model;
 
-import com.sun.corba.se.spi.orb.StringPair;
-
-import javax.swing.*;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.prefs.Preferences;
 
-import static java.sql.DriverManager.getConnection;
 import static java.util.prefs.Preferences.userNodeForPackage;
-import static javax.swing.BoxLayout.Y_AXIS;
-import static javax.swing.JOptionPane.*;
 
 /**
  * @author Katarzyna Janocha, Michał Piekarz
@@ -23,8 +15,6 @@ public class Context {
 
     private Context() {
         this.preferences = userNodeForPackage(Context.class);
-
-
     }
 
     public static Context getContext() {

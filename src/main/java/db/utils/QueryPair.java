@@ -1,41 +1,62 @@
 package db.utils;
 
 import static db.utils.ColumnTypes.*;
+import static db.utils.TableColumns.TableColumn;
 
 /**
  * @author Katarzyna Janocha, Michał Piekarz
  */
 public class QueryPair {
-	private final TableColumns.TableColumn key;
-	private final Object value;
+    private final TableColumn key;
+    private final Object value;
 
-	public QueryPair(TableColumns.TableColumn key, Object value) {
-		this.key = key;
-		this.value = value;
-	}
+    public QueryPair(TableColumn key, Object value) {
+        this.key = key;
+        this.value = value;
+    }
 
-	public TableColumns.TableColumn getKey() {
-		return key;
-	}
+    public QueryPair(String key, Object value) {
+        this.key = getColumn(key);
+        this.value = value;
+    }
 
-	public String getValue() {
-		return value.toString();
-	}
+    private TableColumn getColumn(String name) {
+        Class<?> clazz = TableColumns.class;
 
-	public String getFormattedValue() {
-		switch (key.getType()) {
-		case STRING:
-			return "'" + value.toString() + "'";
-		case BOOLEAN:
-			if ((Boolean) value) {
-				return "TRUE";
-			}
-			return "FALSE";
-		case INTEGER:
-			return value.toString();
-		case DATE:
-			return "date '" + value.toString() + "'";
-		}
-		return value.toString();
-	}
+        for (Class c : clazz.getClasses()) {
+            if (TableColumn.class.isAssignableFrom(c)) {
+                try {
+                    return (TableColumn) Enum.valueOf(c,name.toUpperCase());
+                } catch(Exception ignore) {
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public TableColumn getKey() {
+        return key;
+    }
+
+    public String getValue() {
+        return value.toString();
+    }
+
+    public String getFormattedValue() {
+        switch (key.getType()) {
+            case STRING:
+                return "'" + value.toString() + "'";
+            case BOOLEAN:
+                if ((Boolean) value) {
+                    return "TRUE";
+                }
+                return "FALSE";
+            case INTEGER:
+                return value.toString();
+            case DATE:
+                return "date '" + value.toString() + "'";
+        }
+        return value.toString();
+    }
 }

@@ -50,14 +50,14 @@ public class KsiezaInfoPanel extends JPanel {
 	private Button activities() {
 		Button b = CommonUI.universalButton("AKTYWNOSCI KAPLANOW");
 		
-		b.addActionListener(new ActionListener()) {
+		b.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 //				InfoTable table = new InfoTable(Database.executeQuery(new QueryBuilder().
 //						select(TableColumns.Common.ALL).from(Tables.).build()));
 				//TODO K
-				table.setVisible(true);
+//				table.setVisible(true);
 			}
 		});
 		
