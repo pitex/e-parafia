@@ -25,7 +25,7 @@ CREATE TABLE PARAFIANIE (
 );
 
 CREATE TABLE CHRZTY (
-	id numeric CONSTRAINT pk_chrz PRIMARY KEY,
+	id numeric CONSTRAINT pk_chrz PRIMARY KEY DEFAULT nextval('ID_SEQ'),
 	pesel_dziecka char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel) UNIQUE,
 	pesel_matki char(11) NOT NULL,
 	pesel_ojca char(11) NOT NULL,
@@ -37,14 +37,14 @@ CREATE TABLE CHRZTY (
 );
 
 CREATE TABLE PIERWSZE_KOMUNIE (
-	id numeric CONSTRAINT pk_komu PRIMARY KEY,
+	id numeric CONSTRAINT pk_komu PRIMARY KEY DEFAULT nextval('ID_SEQ'),
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel) UNIQUE,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	data date NOT NULL
 );
 
 CREATE TABLE BIERZMOWANIA (
-	id numeric CONSTRAINT pk_bierz PRIMARY KEY,
+	id numeric CONSTRAINT pk_bierz PRIMARY KEY DEFAULT nextval('ID_SEQ'),
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel) UNIQUE,
 	pesel_swiadka char(11) NOT NULL,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
@@ -52,7 +52,7 @@ CREATE TABLE BIERZMOWANIA (
 );
 
 CREATE TABLE SLUBY (
-	id numeric CONSTRAINT pk_slub PRIMARY KEY,
+	id numeric CONSTRAINT pk_slub PRIMARY KEY DEFAULT nextval('ID_SEQ'),
 	pesel_zony char(11) NOT NULL UNIQUE,
 	pesel_meza char(11) NOT NULL UNIQUE,
 	pesel_swiadka_zony char(11) NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE SLUBY (
 );
 
 CREATE TABLE POGRZEBY (
-	id numeric CONSTRAINT pk_pogrz PRIMARY KEY,
+	id numeric CONSTRAINT pk_pogrz PRIMARY KEY DEFAULT nextval('ID_SEQ'),
 	pesel char(11) CONSTRAINT fk_para REFERENCES parafianie(pesel) UNIQUE,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	ofiara numeric(6, 2),
@@ -71,7 +71,7 @@ CREATE TABLE POGRZEBY (
 );
 
 CREATE TABLE WIZYTY_DUSZPASTERSKIE (
-	id numeric CONSTRAINT pk_wiz PRIMARY KEY,
+	id numeric CONSTRAINT pk_wiz PRIMARY KEY DEFAULT nextval('ID_SEQ'),
 	adres varchar(500) NOT NULL,
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	ofiara numeric(6, 2),
@@ -79,7 +79,7 @@ CREATE TABLE WIZYTY_DUSZPASTERSKIE (
 );
 
 CREATE TABLE INTENCJE_MSZALNE (
-	id numeric CONSTRAINT pk_inte PRIMARY KEY,
+	id numeric CONSTRAINT pk_inte PRIMARY KEY DEFAULT nextval('ID_SEQ'),
 	opis varchar(1000),
 	pesel_kapl char(11) CONSTRAINT fk_kapl REFERENCES kaplani(pesel),
 	ofiara numeric(6,2),
@@ -173,7 +173,7 @@ END;
 $check_pesel$
 LANGUAGE plpgsql;
 
--- checks if child is already in parafianie, checks if either of parents is in parafianie, checks god patents' pesels, updates parafianie with child's data if needed
+-- checks if child is already in parafianie, checks if either of parents is in parafianie, checks god parents' pesels, updates parafianie with child's data if needed
 CREATE OR REPLACE FUNCTION handle_chrzest() RETURNS trigger AS $handle_chrzest$
 BEGIN
 	IF NEW.pesel_dziecka IN (SELECT pesel FROM parafianie) THEN
@@ -212,16 +212,6 @@ BEGIN
 	RETURN NEW;
 END;
 $handle_pogrzeb$
-LANGUAGE plpgsql;
-
--- gives id for aktywnosci_kaplanow
-CREATE OR REPLACE FUNCTION give_id() RETURNS trigger AS $give_id$
-BEGIN
-	NEW.id = nextval('ID_SEQ');
-	
-	RETURN NEW;
-END;
-$give_id$
 LANGUAGE plpgsql;
 
 -- checks best men's pesels and if either of ppl in parafianie
@@ -268,17 +258,6 @@ FOR EACH ROW EXECUTE PROCEDURE handle_slub();
 
 CREATE TRIGGER handle_pogrzeb BEFORE DELETE ON pogrzeby
 FOR EACH ROW EXECUTE PROCEDURE handle_pogrzeb();
-
-CREATE TRIGGER give_id_chrzty BEFORE INSERT ON chrzty
-FOR EACH ROW EXECUTE PROCEDURE give_id();
-CREATE TRIGGER give_id_komunia BEFORE INSERT ON pierwsze_komunie
-FOR EACH ROW EXECUTE PROCEDURE give_id();
-CREATE TRIGGER give_id_bierz BEFORE INSERT ON bierzmowania
-FOR EACH ROW EXECUTE PROCEDURE give_id();
-CREATE TRIGGER give_id_sluby BEFORE INSERT ON sluby
-FOR EACH ROW EXECUTE PROCEDURE give_id();
-CREATE TRIGGER give_id_pogrzeby BEFORE INSERT ON pogrzeby
-FOR EACH ROW EXECUTE PROCEDURE give_id();
 
 
 --------------------------------------------------	RULES	--------------------------------------------------
