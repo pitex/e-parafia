@@ -1,7 +1,5 @@
 package ui;
 
-import model.Context;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +12,7 @@ import java.security.GeneralSecurityException;
 import static java.awt.Dialog.ModalityType.APPLICATION_MODAL;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static javax.swing.JOptionPane.showMessageDialog;
+import static model.Context.getContext;
 import static security.Encoder.encrypt;
 
 /**
@@ -21,15 +20,13 @@ import static security.Encoder.encrypt;
  */
 public class LoginDialog extends JDialog {
 
-    private final Context context;
     private JTextField loginTextField;
     private JPasswordField pwdTextField;
     private JButton loginButton;
     private JButton cancelButton;
 
-    public LoginDialog(Frame owner, Context context) {
+    public LoginDialog(Frame owner) {
         super(owner, "Login");
-        this.context = context;
 
         setModalityType(APPLICATION_MODAL);
         setLocationRelativeTo(owner);
@@ -44,13 +41,13 @@ public class LoginDialog extends JDialog {
     }
 
     private void initPreferences() {
-        if (context.getPreferences().get("admin", null) == null) {
+        if (getContext().getPreferences().get("admin", null) == null) {
             try {
-                context.getPreferences().put("admin", encrypt("admin"));
+                getContext().getPreferences().put("admin", encrypt("admin"));
             }
             catch (GeneralSecurityException | UnsupportedEncodingException e) {
                 e.printStackTrace();
-                showMessageDialog(this,e.getMessage(),"Error",ERROR_MESSAGE);
+                showMessageDialog(this, e.getMessage(), "Error", ERROR_MESSAGE);
             }
         }
     }
@@ -91,7 +88,7 @@ public class LoginDialog extends JDialog {
         String username = loginTextField.getText();
         String pass = new String(pwdTextField.getPassword());
 
-        String pwd = context.getPreferences().get(username, null);
+        String pwd = getContext().getPreferences().get(username, null);
         String hash;
 
         try {
@@ -99,14 +96,14 @@ public class LoginDialog extends JDialog {
         }
         catch (GeneralSecurityException | UnsupportedEncodingException e1) {
             e1.printStackTrace();
-            showMessageDialog(this,e1.getMessage(),"Error",ERROR_MESSAGE);
+            showMessageDialog(this, e1.getMessage(), "Error", ERROR_MESSAGE);
             return;
         }
 
         if (!hash.equals(pwd)) {
             JOptionPane.showMessageDialog(this, "Wrong login or password", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            context.setUsername(username);
+            getContext().setUsername(username);
             getOwner().setVisible(true);
             dispose();
         }

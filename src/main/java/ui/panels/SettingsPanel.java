@@ -1,7 +1,5 @@
 package ui.panels;
 
-import model.Context;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,6 +13,7 @@ import java.util.List;
 import static java.awt.FlowLayout.LEFT;
 import static java.awt.GridBagConstraints.*;
 import static javax.swing.JOptionPane.*;
+import static model.Context.getContext;
 import static security.Encoder.encrypt;
 
 /**
@@ -22,7 +21,6 @@ import static security.Encoder.encrypt;
  */
 public class SettingsPanel extends JPanel {
 
-    private final Context context;
     private List<Component> adminComponents;
     private JLabel usernameLabel;
     private JButton newUserButton;
@@ -34,11 +32,10 @@ public class SettingsPanel extends JPanel {
     private JPasswordField newUserPasswordField;
     private JPasswordField newUserPasswordField2;
 
-    public SettingsPanel(Context context) {
+    public SettingsPanel() {
         super();
 
         this.adminComponents = new ArrayList<>();
-        this.context = context;
 
         initComponents();
 
@@ -47,9 +44,9 @@ public class SettingsPanel extends JPanel {
     }
 
     public void init() {
-        usernameLabel.setText("Użytkownik: " + context.getUsername());
+        usernameLabel.setText("Użytkownik: " + getContext().getUsername());
 
-        boolean vis = context.getUsername().equals("admin");
+        boolean vis = getContext().getUsername().equals("admin");
 
         for (Component component : adminComponents) {
             component.setEnabled(vis);
@@ -158,7 +155,7 @@ public class SettingsPanel extends JPanel {
         String oldPass = new String(oldPasswordField.getPassword());
         String newPass = new String(newPasswordField.getPassword());
         String newPass2 = new String(newPasswordField2.getPassword());
-        String pwd = context.getPreferences().get(context.getUsername(), null);
+        String pwd = getContext().getPreferences().get(getContext().getUsername(), null);
         String hash;
 
         try {
@@ -184,7 +181,7 @@ public class SettingsPanel extends JPanel {
         }
 
         try {
-            context.getPreferences().put(context.getUsername(), encrypt(newPass));
+            getContext().getPreferences().put(getContext().getUsername(), encrypt(newPass));
         }
         catch (GeneralSecurityException | UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -217,7 +214,7 @@ public class SettingsPanel extends JPanel {
         }
 
         try {
-            context.getPreferences().put(username, encrypt(pass));
+            getContext().getPreferences().put(username, encrypt(pass));
         }
         catch (GeneralSecurityException | UnsupportedEncodingException e) {
             e.printStackTrace();

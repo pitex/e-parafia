@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Connection;
 import java.util.prefs.Preferences;
 
 /**
@@ -7,11 +8,17 @@ import java.util.prefs.Preferences;
  */
 public class Context {
 
+    private static Context context = new Context();
     private final Preferences preferences;
+    private Connection connection;
     private String username;
 
-    public Context(Preferences preferences) {
-        this.preferences = preferences;
+    public static Context getContext() {
+        return context;
+    }
+
+    private Context() {
+        this.preferences = Preferences.userNodeForPackage(Context.class);
     }
 
     public String getUsername() {
