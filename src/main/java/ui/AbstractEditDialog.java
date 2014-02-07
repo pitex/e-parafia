@@ -2,7 +2,6 @@ package ui;
 
 import db.utils.Tables;
 
-import javax.naming.Context;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -23,17 +22,15 @@ import static java.util.Arrays.asList;
  */
 public abstract class AbstractEditDialog extends JDialog {
 
-    protected final Context context;
     protected Tables table;
     protected List<TableColumn> names;
     protected List<JTextField> textFields;
     protected JButton submitButton;
     protected JButton cancelButton;
 
-    public AbstractEditDialog(Frame owner, Context context, Tables table, TableColumn... names) {
+    public AbstractEditDialog(Frame owner, Tables table, TableColumn... names) {
         super(owner);
 
-        this.context = context;
         this.table = table;
         this.names = new ArrayList<>(asList(names));
         this.textFields = new ArrayList<>();
