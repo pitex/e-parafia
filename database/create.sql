@@ -119,6 +119,22 @@ CREATE VIEW ofiary AS
 	SELECT ofiara, 'INTENCJA', data FROM INTENCJE_MSZALNE
 	ORDER BY data;
 
+CREATE VIEW pomocnicy AS
+	SELECT * FROM PARAFIANIE
+	where funkcja_pomocnika is not null;
+
+CREATE VIEW ministranci AS
+	SELECT * FROM PARAFIANIE
+	where funkcja_pomocnika = 'MINISTRANT';
+
+CREATE VIEW lektorzy AS
+	SELECT * FROM PARAFIANIE
+	where funkcja_pomocnika = 'LEKTOR';
+
+CREATE VIEW szafarze AS
+	SELECT * FROM PARAFIANIE
+	where funkcja_pomocnika = 'SZAFARZ';
+
 --------------------------------------------------	TRIGGERS	--------------------------------------------------
 
 
