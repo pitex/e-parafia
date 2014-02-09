@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="e-parafia:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/e_parafia_jar</output-path>
+    <root id="root">
+      <element id="archive" name="e-parafia.jar">
+        <element id="module-output" name="e-parafia" />
+      </element>
+      <element id="library" level="project" name="Maven: org.postgresql:postgresql:9.2-1002-jdbc4" />
+    </root>
+  </artifact>
+</component>
